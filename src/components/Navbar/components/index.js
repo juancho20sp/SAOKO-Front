@@ -1,0 +1,1 @@
+export { default as NavbarIcon } from './NavbarIcon/NavbarIcon';

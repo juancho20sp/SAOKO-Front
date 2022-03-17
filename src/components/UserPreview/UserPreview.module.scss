@@ -1,0 +1,41 @@
+.userModule-container {
+    position: absolute;
+    right: 0;
+    
+    @include xs {
+        width: 35%;
+    }
+
+    @include md {
+        width: 25%;
+    }
+
+    @include md {
+        width: 20%;
+    }
+
+    @include xl {
+        width: 15%;
+    }
+
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    .userModule-username {
+        text-transform: uppercase;
+
+        @include xs {
+            font-size: $small;
+        }
+    
+        @include lg {
+            font-size: $regular;
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

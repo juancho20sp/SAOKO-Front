@@ -1,0 +1,33 @@
+.layout-main {
+    height: 100vh;
+    width: 100vw;
+
+    max-width: 100vw;
+    max-height: 100vh;
+
+    display: grid;
+
+    // TODO -> be responsive
+    @include xs {
+        grid-template-columns: 18% 1fr;
+    }
+
+    @include md {
+        grid-template-columns: 15% 1fr;
+    }
+
+    @include lg {
+        grid-template-columns: 11% 1fr;
+    }
+
+    @include xl {
+        grid-template-columns: 8% 1fr;
+    }
+
+    .layout-container {
+        display: grid;
+        grid-template-rows: auto 1fr;
+
+        max-height: calc(100% - 2.4rem) ;
+    }
+}

@@ -1,0 +1,58 @@
+.welcomeMessage-main {
+    letter-spacing: $letter-spacing; 
+    text-align: center;
+
+    height: fit-content;
+    margin-top: 10rem;
+
+    color: $pink-tertiary;
+    justify-self: center;
+
+    @include xs {
+        width: 80%;
+    }
+
+    @include lg {
+        width: 60%;
+    }
+
+    .welcomeMessage-title {
+        @include xs {
+            font-size: $medium;
+        }
+
+        @include lg {
+            font-size: $huge;
+        }
+    }
+
+    .welcomeMessage-content {
+        margin: 2rem 0;
+    }
+
+    .welcomeMessage-button {
+        background-color: $pink-primary;
+        border-radius: $border-radius - 10;
+        color: $dark-gray;
+
+        height: 2rem;
+        width: 40%;
+
+        text-transform: uppercase;
+        letter-spacing: $letter-spacing;
+
+        box-shadow: 2px 2px 5px 0px #000;
+
+        @include xs {
+            font-size: $small;
+        }
+
+        @include lg {
+            font-size: $regular;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

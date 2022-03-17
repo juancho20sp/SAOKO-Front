@@ -1,0 +1,16 @@
+.banner-main {
+    background-color: $pink-primary;
+
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+
+
+    .banner-title {
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 2.4rem;
+
+        align-self: center;
+    }
+}

@@ -1,0 +1,28 @@
+.home-main {
+    height: 100vh;
+    width: 100vw;
+
+    display: grid;
+
+    // TODO -> be responsive
+    @include xs {
+        grid-template-columns: 18% 1fr;
+    }
+
+    @include md {
+        grid-template-columns: 15% 1fr;
+    }
+
+    @include lg {
+        grid-template-columns: 11% 1fr;
+    }
+
+    @include xl {
+        grid-template-columns: 8% 1fr;
+    }
+
+    .home-container {
+        display: grid;
+        grid-template-rows: auto 1fr;
+    }
+}

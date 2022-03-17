@@ -1,0 +1,168 @@
+.profile-main {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .profile-container {
+
+        @include xs {
+            width: 90%;
+            height: 80%;
+        }
+    
+        @include md {
+            width: 80%;
+            height: 70%;
+        }
+
+        @include lg {
+            width: 60%;
+        }
+
+        .profile-title {
+            color: $pink-tertiary;
+
+            text-align: center;
+            letter-spacing: $title-letter-spacing;
+            font-weight: 500;
+            font-size: $huge;
+
+            margin-bottom: $medium
+        }
+    
+        .profile-form {
+            border: 2px solid $pink-primary;
+            border-radius: $border-radius;
+
+            .profile-formRow {
+                margin: $small 0;
+
+                display: flex;
+                justify-content: space-evenly;
+
+                .profile-password_title {
+                    text-transform: uppercase;
+                    letter-spacing: 2.5px;
+                    color: $pink-secondary;
+    
+                    width: 100%;
+
+                    margin: $small $small 0 $small;
+                    padding-left: 10px;
+                }
+
+                .profile-button_container {
+                    width: 100%;
+
+                    margin: $small;
+
+                    display: grid;
+                    grid-template-rows: 1fr;
+                  
+                    .profile-button {
+                        margin-top: auto;
+
+                        background-color: $pink-primary;
+                        text-transform: uppercase;
+                        letter-spacing: $letter-spacing;
+                        font-size: $small;
+                        color: $dark-gray;
+
+                        border-radius: $border-radius / 2;
+
+                        height: $medium * 1.5;
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    }   
+                }
+            }
+
+        
+            .profile-formInput {
+                border-radius: 2px solid red;
+
+                width: 100%;
+
+                margin: $small;
+
+                display: grid;
+                grid-template-rows: auto 1fr;
+
+                label {
+                    @include xs {
+                        font-size: $small; 
+                    }
+
+                    @include lg {
+                        font-size: 1rem; 
+                    }
+            
+                    color: $pink-secondary;
+
+                    font-weight: bold;
+                    letter-spacing: 2.5px;
+                    text-transform: uppercase;
+
+                    margin-bottom: 5px;
+                    padding-left: 10px;
+                }
+
+                .profile-input {
+                    background-color: transparent;
+                    border: 2px solid $pink-tertiary;
+                    border-radius: $border-radius / 2.5;
+                    letter-spacing: $letter-spacing;
+                    height: 2rem;
+
+                    padding: 0 10px;
+
+                    color: white;
+
+                    &::placeholder {
+                        color: $pink-tertiary;
+                        font-size: 0.8rem;
+                        letter-spacing: $letter-spacing;
+                        text-transform: uppercase;
+
+                        opacity: 0.5;
+                    }
+                }
+
+                .profile-button {
+                    width: 100%;
+                    // margin: $small;
+                    margin-top: auto;
+
+                    background-color: $pink-primary;
+                    text-transform: uppercase;
+                    letter-spacing: $letter-spacing;
+                    font-size: $small;
+                    color: $dark-gray;
+
+                    border-radius: $border-radius / 2;
+
+                    height: $medium * 1.5;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+                
+            .profile-formRow_actions {
+                margin: $small 0;
+
+                display: flex;
+                justify-content: space-evenly;
+
+                
+            }
+        }
+    }     
+}
+  

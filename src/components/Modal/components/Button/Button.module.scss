@@ -1,0 +1,19 @@
+.modal-button {
+    background-color: #8884FF;
+    border-radius: $border-radius;
+    box-shadow: 2px 2px 5px $dark-gray;
+    
+    width: 95%;
+    height: 50%;
+
+    margin: 0 5px;
+
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing;
+    font-size: $regular;
+    color: $dark-gray;
+
+    &:hover {
+        cursor: pointer;
+    }
+}

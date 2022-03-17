@@ -1,0 +1,17 @@
+.modal-input {
+    border: 1px solid $dark-gray;
+    border-radius: 10px;
+    background-color: #FDE2FF;
+
+    font-size: $huge;
+    text-align: center;
+    
+
+    height: 50%;
+    width: 100%;
+
+    &::placeholder {
+        height: 100%;
+        opacity: 0.6;
+    }
+}

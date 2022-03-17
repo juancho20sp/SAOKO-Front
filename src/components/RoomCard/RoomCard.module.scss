@@ -1,0 +1,16 @@
+.roomCard-container {
+    border-radius: $border-radius;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: $pink-secondary;
+
+    display: grid;
+    place-items: center;
+
+    .roomCard-name {
+        font-size: $regular;
+        text-transform: uppercase;
+    }
+}

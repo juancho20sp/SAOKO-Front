@@ -1,0 +1,140 @@
+.login-main {
+    text-transform: uppercase;
+
+    height: 100vh;
+    width: 100vw;
+
+    display: grid;
+    place-items: center;
+
+    .login-container {
+        @include xs {
+            width: 90%;
+            height: 60%; 
+        }
+
+        @include md {
+            width: 70%;
+            height: 40%; 
+        }
+
+        @include lg {
+            width: 50%;
+            height: 40%; 
+        }
+
+        @include xl {
+            width: 40%;
+            height: 40%; 
+        }
+
+        .login-title {
+            color: $pink-tertiary;
+
+            text-align: center;
+            letter-spacing: $title-letter-spacing;
+            font-weight: 500;
+            font-size: $huge;
+
+            margin-bottom: 15px;
+        }
+
+        .login-form {
+            background-color: $pink-primary;
+            border-radius: $border-radius;
+
+            height: 60%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+
+            .login-formRow {
+                padding: 0 42px;
+    
+                display: grid;
+                grid-template-rows: auto 1fr;
+
+                label {
+                    @include xs {
+                        font-size: $small; 
+                    }
+
+                    @include md {
+                        font-size: 1rem; 
+                    }
+            
+                    
+                    font-weight: bold;
+                    letter-spacing: 2.5px;
+
+                    margin-bottom: 5px;
+                    padding-left: 10px;
+                }
+
+                .login-input {
+                    border-radius: $border-radius / 2.5;
+                    letter-spacing: $letter-spacing;
+                    height: 2rem;
+
+                    padding: 0 10px;
+
+                    &::placeholder {
+                        font-size: 0.8rem;
+                        letter-spacing: $letter-spacing;
+                    }
+                }
+            }
+
+            .login-formRow_actions {
+                display: flex;
+
+                .login-button {
+                    text-transform: uppercase;
+                    letter-spacing: $letter-spacing;
+                    font-size: $small;
+                    color: $pink-tertiary;
+
+                    background-color: $dark-gray;
+                    border-radius: $border-radius / 2;
+
+                    margin: 0 auto;
+                    
+                    height: $medium * 1.2;
+                    width: 35%;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+       
+        .login-links{
+            text-align: center;
+
+            margin: 10px 0;
+
+            .login-link {
+                text-decoration: underline;
+                letter-spacing: $letter-spacing;
+
+                @include xs {
+                    font-size: $small;
+                }
+
+                @include md {
+                    font-size: 1rem;
+                }
+
+                color: $pink-tertiary;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+        
+    }
+}
+

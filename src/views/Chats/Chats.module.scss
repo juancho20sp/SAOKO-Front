@@ -1,0 +1,32 @@
+.chats-container {
+    // position: relative;
+
+    max-height: 90%;
+
+    margin: $medium  6rem;
+    padding-right: $small;
+
+    overflow: scroll;
+    overflow-x: hidden;
+    
+    display: grid;
+
+    @include xs {
+        grid-template-columns: repeat(1, minmax(180px, auto) );
+    }
+
+    @include sm {
+        grid-template-columns: repeat(2, minmax(180px, auto) );
+    }
+
+    @include md {
+        grid-template-columns: repeat(3, minmax(180px, auto) );
+    }
+
+    @include lg {
+        grid-template-columns: repeat(4, minmax(180px, auto) );
+    }
+
+    grid-auto-rows: minmax(180px, 8rem);
+    grid-gap: $huge;
+}

@@ -1,0 +1,122 @@
+.createAccount-main {
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .createAccount-container {
+
+        @include xs {
+            width: 90%;
+            height: 80%;
+        }
+    
+        @include md {
+            width: 60%;
+            height: 70%;
+        }
+
+        .createAccount-title {
+            color: $pink-tertiary;
+
+            text-align: center;
+            letter-spacing: $title-letter-spacing;
+            font-weight: 500;
+            font-size: $huge;
+
+            margin-bottom: $medium
+        }
+    
+        .createAccount-form {
+            border: 2px solid $pink-primary;
+            border-radius: $border-radius;
+
+            .createAccount-formRow {
+                margin: $small 0;
+
+                display: flex;
+                justify-content: space-evenly;
+            }
+        
+            .createAccount-formInput {
+                border-radius: 2px solid red;
+
+                width: 100%;
+
+                margin: $small;
+
+                display: grid;
+                grid-template-rows: auto 1fr;
+
+                label {
+                    @include xs {
+                        font-size: $small; 
+                    }
+
+                    @include md {
+                        font-size: 1rem; 
+                    }
+            
+                    color: $pink-secondary;
+
+                    font-weight: bold;
+                    letter-spacing: 2.5px;
+                    text-transform: uppercase;
+
+                    margin-bottom: 5px;
+                    padding-left: 10px;
+                }
+
+                .createAccount-input {
+                    background-color: transparent;
+                    border: 2px solid $pink-tertiary;
+                    border-radius: $border-radius / 2.5;
+                    letter-spacing: $letter-spacing;
+                    height: 2rem;
+
+                    padding: 0 10px;
+
+                    color: white;
+
+                    &::placeholder {
+                        color: $pink-tertiary;
+                        font-size: 0.8rem;
+                        letter-spacing: $letter-spacing;
+                        text-transform: uppercase;
+
+                        opacity: 0.5;
+                    }
+                }
+            }
+                
+            .createAccount-formRow_actions {
+                margin: $small 0;
+
+                display: flex;
+                justify-content: space-evenly;
+
+                .createAccount-button {
+                    width: 100%;
+                    margin: $small;
+
+                    background-color: $pink-primary;
+                    text-transform: uppercase;
+                    letter-spacing: $letter-spacing;
+                    font-size: $small;
+                    color: $dark-gray;
+
+                    border-radius: $border-radius / 2;
+
+                    height: $medium * 1.2;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }     
+}
+  
