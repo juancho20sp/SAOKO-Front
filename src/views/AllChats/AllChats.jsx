@@ -6,7 +6,7 @@ import { ModalContext } from '../../utils';
 // Components
 import { Layout, RoomCard, AddRoom } from '../../components';
 
-import styles from './Chats.module.scss';
+import styles from './AllChats.module.scss';
 
 const cards = [
   {
@@ -107,7 +107,7 @@ const addRoomClick = (setIsShowing, setModalType, modalOptions) => {
   setModalType(modalOptions.createChat);
 };
 
-const Chats = () => {
+const AllChats = () => {
   const { setIsShowing, setModalType, modalOptions } = useContext(ModalContext);
 
   return (
@@ -126,4 +126,4 @@ const Chats = () => {
   );
 };
 
-export default Chats;
+export default AllChats;

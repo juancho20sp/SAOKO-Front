@@ -9,14 +9,22 @@ import { routes, modalOptions } from './utils/';
 import { ProtectedRoute, Modal, ProvidedElement } from './components';
 
 // Views
-import { Login, Home, CreateAccount, Chats, Boards, Profile } from './views';
+import {
+  Login,
+  Home,
+  CreateAccount,
+  AllChats,
+  Boards,
+  Profile,
+  ChatRoom,
+} from './views';
 
 // Context
 import { ModalContext } from './utils';
 
 function App() {
   // Modal
-  const [isShowing, setIsShowing] = useState(true);
+  const [isShowing, setIsShowing] = useState(false);
   const [modalType, setModalType] = useState(modalOptions.createChat);
   const [code, setCode] = useState('CODE TEST ON APP.JSX');
 
@@ -37,7 +45,7 @@ function App() {
                 <ProvidedElement
                   Context={ModalContext}
                   contextValue={{ setIsShowing, setModalType, modalOptions }}
-                  component={<Chats />}
+                  component={<AllChats />}
                 ></ProvidedElement>
               }
             />
@@ -53,6 +61,8 @@ function App() {
               }
             />
           </Route>
+
+          <Route exact path={routes.chatRoom.path} element={<ChatRoom />} />
 
           <Route path='*' element={<p>There's nothing here: 404!</p>} />
         </Routes>

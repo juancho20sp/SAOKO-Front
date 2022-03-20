@@ -1,21 +1,27 @@
 import React from 'react';
 import styles from './RoomCard.module.scss';
 
+// Router
+import { routes } from '../../utils';
+import { useNavigate } from 'react-router-dom';
+
 // Components
 import { IconContext } from 'react-icons';
 import { BsChatLeftDots } from 'react-icons/bs';
 
-const RoomCard = ({ icon, text, path }) => {
+const RoomCard = ({ id, name, path }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={styles['roomCard-container']}
-      //   onClick={() => handleClick(navigate)}
+      onClick={() => navigate(`${routes.chats.path}/${id}`)}
     >
       <IconContext.Provider value={{ size: '3.5rem' }}>
         <BsChatLeftDots />
       </IconContext.Provider>
 
-      <p className={styles['roomCard-name']}>Chat 1</p>
+      <p className={styles['roomCard-name']}>{name}</p>
     </div>
   );
 };

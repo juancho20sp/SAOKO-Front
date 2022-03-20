@@ -28,6 +28,11 @@ const routes = {
         id: 5,
         path: '/profile',
         name: 'profile'
+    },
+    chatRoom: {
+        id: 6,
+        path: '/chats/:id',
+        name: 'chatRoom'
     }
 }
 
