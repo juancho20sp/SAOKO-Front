@@ -10,8 +10,12 @@
         font-size: $regular;
         font-weight: 500;
         letter-spacing: $letter-spacing;
+        color: $pink-tertiary;
 
         padding: 0 1rem;
+
+        // $
+        // TODO -> make this huge each time
 
         &::placeholder {
             color: $pink-tertiary;
@@ -20,6 +24,8 @@
 
     .messageInput-icon {
         color: $pink-tertiary;
+
+        cursor: pointer;
 
         align-self: center;
         justify-self: center;

@@ -5,21 +5,23 @@ import styles from './MessageInput.module.scss';
 import { IconContext } from 'react-icons';
 import { AiOutlineSend } from 'react-icons/ai';
 
-const MessageInput = () => {
+const MessageInput = ({ message, setMessage, sendMessage }) => {
   return (
-    <div className={styles['messageInput-container']}>
+    <form className={styles['messageInput-container']}>
       <input
         className={styles['messageInput-input']}
         type='text'
         placeholder='Escribe un mensaje nuevo'
+        value={message}
+        onChange={(ev) => setMessage(ev.target.value)}
       />
 
       <div className={styles['messageInput-icon']}>
         <IconContext.Provider value={{ size: '2.5rem' }}>
-          <AiOutlineSend />
+          <AiOutlineSend onClick={sendMessage} />
         </IconContext.Provider>
       </div>
-    </div>
+    </form>
   );
 };
 
