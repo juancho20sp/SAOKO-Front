@@ -13,4 +13,9 @@
         font-size: $regular;
         text-transform: uppercase;
     }
+
+    &:hover {
+        background-color: rgba($color: $pink-primary, $alpha: 0.9);
+        cursor: pointer;
+    }
 }

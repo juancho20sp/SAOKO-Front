@@ -9,24 +9,6 @@ import { Layout, RoomCard, AddRoom } from '../../components';
 
 import styles from './AllChats.module.scss';
 
-const myCards = [
-  {
-    id: 0,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 1,
-    name: 'Chat 2',
-    path: 'chat-two',
-  },
-  {
-    id: 2,
-    name: 'Chat 3',
-    path: 'chat-three',
-  },
-];
-
 const addRoomClick = (setIsShowing, setModalType, modalOptions) => {
   console.log('Adding room...');
   setIsShowing((isShowing) => !isShowing);
@@ -34,17 +16,10 @@ const addRoomClick = (setIsShowing, setModalType, modalOptions) => {
 };
 
 const AllChats = () => {
-  // Redux
-  const globalState = useSelector((state) => state);
-
-  useEffect(() => {
-    console.log(globalState);
-  }, [globalState]);
+  // Cards
+  const cards = useSelector((state) => state.room.chatRooms);
 
   const { setIsShowing, setModalType, modalOptions } = useContext(ModalContext);
-
-  // Cards
-  const [cards, setCards] = useState(myCards);
 
   return (
     <Layout>

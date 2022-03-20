@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-// import testReducer from './testSlice';
 import loginReducer from './slices/loginSlice';
+import roomReducer from './slices/roomSlice';
 
 export default configureStore({
     reducer: {
-        login: loginReducer
+        login: loginReducer,
+        room: roomReducer
     }
 });

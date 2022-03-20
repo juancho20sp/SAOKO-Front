@@ -10,13 +10,13 @@ import { IconContext } from 'react-icons';
 const NavbarIcon = ({ text, icon, path, onClickFunction }) => {
   return (
     <IconContext.Provider value={{ size: '2.3rem' }}>
-      <li className={styles['navbarIcon-main']} onClick={onClickFunction}>
-        <NavLink to={path}>
+      <NavLink to={path}>
+        <li className={styles['navbarIcon-main']} onClick={onClickFunction}>
           {icon()}
 
           <p className={styles['navbarIcon-text']}>{text}</p>
-        </NavLink>
-      </li>
+        </li>
+      </NavLink>
     </IconContext.Provider>
   );
 };

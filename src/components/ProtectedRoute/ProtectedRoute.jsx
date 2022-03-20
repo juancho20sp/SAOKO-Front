@@ -10,9 +10,6 @@ import { useSelector } from 'react-redux';
 const ProtectedRoute = ({ children }) => {
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
 
-  // $
-  console.log(`Is logged in: ${isLoggedIn}`);
-
   return isLoggedIn ? <Outlet /> : <Navigate to={routes.login.path} replace />;
 };
 

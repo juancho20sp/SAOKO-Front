@@ -20,7 +20,6 @@ const handleLogInClick = (event, navigate, dispatch) => {
   event.preventDefault();
 
   // $
-  console.log('log in clicked');
   // TODO -> BORRAR
   dispatch(login());
   navigate(routes.home.path);
@@ -31,7 +30,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   // Redux
-  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
 
   return (

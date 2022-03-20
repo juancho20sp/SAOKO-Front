@@ -2,12 +2,16 @@ import React from 'react';
 import styles from './Modal.module.scss';
 
 // Constants
-import { modalOptions, modalOptionTypes } from '../../utils/modal/modal';
+import { modalOptions } from '../../utils/modal/modal';
 
 // Components
 import { Button, RoomCode, Input } from './components';
 
-const useModalType = (type, setModalType, setIsShowing) => {
+// Redux
+import { useDispatch } from 'react-redux';
+import { setNewRoomData } from '../../redux/slices/roomSlice';
+
+const useModalType = (type, setModalType, setIsShowing, dispatch) => {
   const handleCloseModal = () => {
     setIsShowing((isShowing) => !isShowing);
   };
@@ -18,7 +22,13 @@ const useModalType = (type, setModalType, setIsShowing) => {
         setModalType(modalOptions.shareChat);
 
         // $
-        console.log('logic for adding a new room card');
+        const newRoom = {
+          id: Math.floor(100000000 + Math.random() * 900000000),
+          name: 'New Chat',
+          path: 'new-chat',
+        };
+
+        dispatch(setNewRoomData(newRoom));
       };
 
       const handleUseChatCode = () => {
@@ -74,10 +84,14 @@ const useModalType = (type, setModalType, setIsShowing) => {
  * @returns
  */
 const Modal = ({ isShowing, type, code, setModalType, setIsShowing }) => {
+  // Redux
+  const dispatch = useDispatch();
+
   const [title, firstRow, secondRow] = useModalType(
     type,
     setModalType,
-    setIsShowing
+    setIsShowing,
+    dispatch
   );
 
   if (!isShowing) {
