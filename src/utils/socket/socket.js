@@ -8,6 +8,10 @@ import io from 'socket.io-client';
 
 debugger;
 
-const socket = io('http://localhost:9092')
+const socket = io('http://localhost:9092/chat?token=abc123', {
+    transports: ['polling', 'websocket']
+})
+
+console.log(socket);
 
 export default socket;

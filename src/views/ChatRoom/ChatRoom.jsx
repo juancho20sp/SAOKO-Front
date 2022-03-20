@@ -41,16 +41,31 @@ const ChatRoom = () => {
     // $
     debugger;
 
-    // socket.emit('connect', name);
-    socket.connect();
+    socket.on('connect', function () {
+      console.log('user connected');
 
-    socket.on('disconnect', (data) => {
-      console.log('USER DISCONECTED WITH DATA:');
-      console.log(data);
+      const adminMessage = {
+        id: Math.floor(100000000 + Math.random() * 900000000),
+        username: 'ADMIN',
+        message: `${name} ha entrado al chat`,
+        // time: new Date().toLocaleString(),
+        time: new Date().toLocaleTimeString(),
+      };
+
+      setAllMessages([...allMessages, adminMessage]);
     });
 
-    socket.on('reconnect_attempt', (attempts) => {
-      console.log('Try to reconnect at ' + attempts + ' attempt(s).');
+    socket.on('disconnect', function () {
+      console.log('user disconnected');
+
+      const adminMessage = {
+        id: Math.floor(100000000 + Math.random() * 900000000),
+        username: 'ADMIN',
+        message: `${name} ha salido del chat`,
+        time: new Date().toLocaleTimeString(),
+      };
+
+      setAllMessages([...allMessages, adminMessage]);
     });
   }, []);
 
@@ -60,9 +75,12 @@ const ChatRoom = () => {
 
     debugger;
 
+    // messageSent, sender, time, text
     const myObject = {
-      userName: name,
+      id: Math.floor(100000000 + Math.random() * 900000000),
+      username: name,
       message,
+      time: new Date().toLocaleTimeString(),
     };
 
     socket.emit('chat', myObject);
@@ -72,7 +90,10 @@ const ChatRoom = () => {
 
   // NEW MESSAGES
   useEffect(() => {
-    socket.on('newMessages', (message) => {
+    socket.on('chat', (message) => {
+      // $
+      debugger;
+
       setAllMessages([...allMessages, message]);
     });
 
@@ -104,8 +125,10 @@ const ChatRoom = () => {
       <div className={styles['chatRoom-main']}>
         <div className={styles['chatRoom-container']}>
           <div className={styles['chatRoom-messageContainer']}>
-            {chats.length > 0 &&
-              chats.map((chat) => <MessageBox key={chat.id} {...chat} />)}
+            {allMessages.length > 0 &&
+              allMessages.map((message) => (
+                <MessageBox key={message.id} {...message} />
+              ))}
           </div>
           <MessageInput {...messageInputProps} />
         </div>

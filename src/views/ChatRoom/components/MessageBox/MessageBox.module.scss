@@ -21,7 +21,7 @@
 
         text-transform: uppercase;
         
-        .messageBox-sender {
+        .messageBox-username {
             font-weight: bold;
 
             margin-right: 1rem;
@@ -34,7 +34,7 @@
 
     }
 
-    .messageBox-text {
+    .messageBox-message {
         align-self: center;
     }
 }
