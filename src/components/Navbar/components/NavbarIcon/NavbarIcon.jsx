@@ -7,10 +7,10 @@ import { NavLink } from 'react-router-dom';
 // Components
 import { IconContext } from 'react-icons';
 
-const NavbarIcon = ({ text, icon, path }) => {
+const NavbarIcon = ({ text, icon, path, onClickFunction }) => {
   return (
     <IconContext.Provider value={{ size: '2.3rem' }}>
-      <li className={styles['navbarIcon-main']}>
+      <li className={styles['navbarIcon-main']} onClick={onClickFunction}>
         <NavLink to={path}>
           {icon()}
 

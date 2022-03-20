@@ -4,8 +4,11 @@ import { Navigate, Outlet } from 'react-router-dom';
 // Routes
 import { routes } from '../../utils/';
 
+// Redux
+import { useSelector } from 'react-redux';
+
 const ProtectedRoute = ({ children }) => {
-  const isLoggedIn = true;
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
 
   // $
   console.log(`Is logged in: ${isLoggedIn}`);

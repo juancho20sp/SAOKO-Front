@@ -7,7 +7,7 @@ import { routes } from '../../utils';
 
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../../redux/testSlice';
+import { login } from '../../redux/slices/loginSlice';
 
 const handleSignInClick = (event, navigate) => {
   event.preventDefault();
@@ -22,8 +22,8 @@ const handleLogInClick = (event, navigate, dispatch) => {
   // $
   console.log('log in clicked');
   // TODO -> BORRAR
-  // navigate(routes.home.path);
   dispatch(login());
+  navigate(routes.home.path);
 };
 
 const Login = () => {
@@ -31,12 +31,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   // Redux
-  const isLoggedIn = useSelector((state) => state.test.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    console.log(`Redux test logged in: ${isLoggedIn}`);
-  }, [isLoggedIn]);
 
   return (
     <main className={styles['login-main']}>
