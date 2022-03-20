@@ -23,6 +23,7 @@ import {
 import { ModalContext } from './utils';
 
 function App() {
+  // TODO -> Pass this to hook
   // Modal
   const [isShowing, setIsShowing] = useState(false);
   const [modalType, setModalType] = useState(modalOptions.createChat);

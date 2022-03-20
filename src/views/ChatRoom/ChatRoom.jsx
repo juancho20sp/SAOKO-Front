@@ -39,7 +39,7 @@ const ChatRoom = () => {
   // CONNECT
   useEffect(() => {
     // $
-    debugger;
+    // debugger;
 
     socket.on('connect', function () {
       console.log('user connected');
@@ -52,6 +52,7 @@ const ChatRoom = () => {
         time: new Date().toLocaleTimeString(),
       };
 
+      socket.emit('chat', adminMessage);
       setAllMessages([...allMessages, adminMessage]);
     });
 
@@ -67,13 +68,23 @@ const ChatRoom = () => {
 
       setAllMessages([...allMessages, adminMessage]);
     });
+
+    socket.on('chat', (message) => {
+      // $
+      //   debugger;
+      message.username === name
+        ? (message.messageSent = true)
+        : (message.messageSent = false);
+
+      setAllMessages([...allMessages, message]);
+    });
   }, []);
 
   // SEND MESSAGE
   const sendMessage = () => {
     // event.preventDefault();
 
-    debugger;
+    // debugger;
 
     // messageSent, sender, time, text
     const myObject = {
@@ -92,7 +103,10 @@ const ChatRoom = () => {
   useEffect(() => {
     socket.on('chat', (message) => {
       // $
-      debugger;
+      //   debugger;
+      message.username === name
+        ? (message.messageSent = true)
+        : (message.messageSent = false);
 
       setAllMessages([...allMessages, message]);
     });

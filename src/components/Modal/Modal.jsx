@@ -16,6 +16,9 @@ const useModalType = (type, setModalType, setIsShowing) => {
     case modalOptions.createChat:
       const handleCreateChat = () => {
         setModalType(modalOptions.shareChat);
+
+        // $
+        console.log('logic for adding a new room card');
       };
 
       const handleUseChatCode = () => {

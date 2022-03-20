@@ -1,14 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-// Context
+// State management
 import { ModalContext } from '../../utils';
+import { useSelector } from 'react-redux';
 
 // Components
 import { Layout, RoomCard, AddRoom } from '../../components';
 
 import styles from './AllChats.module.scss';
 
-const cards = [
+const myCards = [
   {
     id: 0,
     name: 'Chat 1',
@@ -16,88 +17,13 @@ const cards = [
   },
   {
     id: 1,
-    name: 'Chat 1',
-    path: 'chat-one',
+    name: 'Chat 2',
+    path: 'chat-two',
   },
   {
     id: 2,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 3,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 4,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 5,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 2,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 3,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 4,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 5,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 2,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 3,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 4,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 5,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 2,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 3,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 4,
-    name: 'Chat 1',
-    path: 'chat-one',
-  },
-  {
-    id: 5,
-    name: 'Chat 1',
-    path: 'chat-one',
+    name: 'Chat 3',
+    path: 'chat-three',
   },
 ];
 
@@ -108,7 +34,17 @@ const addRoomClick = (setIsShowing, setModalType, modalOptions) => {
 };
 
 const AllChats = () => {
+  // Redux
+  const globalState = useSelector((state) => state);
+
+  useEffect(() => {
+    console.log(globalState);
+  }, [globalState]);
+
   const { setIsShowing, setModalType, modalOptions } = useContext(ModalContext);
+
+  // Cards
+  const [cards, setCards] = useState(myCards);
 
   return (
     <Layout>

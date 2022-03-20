@@ -5,6 +5,10 @@ import styles from './Login.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../utils';
 
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { login, logout } from '../../redux/testSlice';
+
 const handleSignInClick = (event, navigate) => {
   event.preventDefault();
   // $
@@ -12,18 +16,27 @@ const handleSignInClick = (event, navigate) => {
   navigate(routes.signIn.path);
 };
 
-const handleLogInClick = (event, navigate) => {
+const handleLogInClick = (event, navigate, dispatch) => {
   event.preventDefault();
 
   // $
   console.log('log in clicked');
   // TODO -> BORRAR
-  navigate(routes.home.path);
+  // navigate(routes.home.path);
+  dispatch(login());
 };
 
 const Login = () => {
   // $
   const navigate = useNavigate();
+
+  // Redux
+  const isLoggedIn = useSelector((state) => state.test.isLoggedIn);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    console.log(`Redux test logged in: ${isLoggedIn}`);
+  }, [isLoggedIn]);
 
   return (
     <main className={styles['login-main']}>
@@ -60,7 +73,7 @@ const Login = () => {
             </button>
             <button
               className={styles['login-button']}
-              onClick={(e) => handleLogInClick(e, navigate)}
+              onClick={(e) => handleLogInClick(e, navigate, dispatch)}
             >
               Log in
             </button>

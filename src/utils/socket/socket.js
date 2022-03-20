@@ -6,9 +6,10 @@ import io from 'socket.io-client';
 //     transports: ['polling', 'websocket']
 // });
 
-debugger;
+// debugger;
 
-const socket = io('http://localhost:9092/chat?token=abc123', {
+// const socket = io('http://localhost:9092/chat?token=abc123', {
+const socket = io('http://localhost:9092', {
     transports: ['polling', 'websocket']
 })
 
