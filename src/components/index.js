@@ -7,3 +7,4 @@ export { default as RoomCard } from './RoomCard/RoomCard';
 export { default as AddRoom } from './AddRoom/AddRoom';
 export { default as Modal } from './Modal/Modal';
 export { default as ProvidedElement } from './ProvidedElement/ProvidedElement';
+export { default as UnprotectedRoute } from './UnprotectedRoute/UnprotectedRoute';

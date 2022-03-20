@@ -6,7 +6,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { routes, modalOptions } from './utils/';
 
 // Components
-import { ProtectedRoute, Modal, ProvidedElement } from './components';
+import {
+  ProtectedRoute,
+  Modal,
+  ProvidedElement,
+  UnprotectedRoute,
+} from './components';
 
 // Views
 import {
@@ -33,7 +38,10 @@ function App() {
     <div className={styles.App}>
       <BrowserRouter>
         <Routes>
-          <Route exact path={routes.login.path} element={<Login />} />
+          <Route element={<UnprotectedRoute />}>
+            <Route exact path={routes.login.path} element={<Login />} />
+          </Route>
+
           <Route exact path={routes.signIn.path} element={<CreateAccount />} />
           <Route element={<ProtectedRoute />}>
             <Route exact path={routes.home.path} element={<Home />} />

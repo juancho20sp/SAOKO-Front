@@ -22,6 +22,7 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
         setModalType(modalOptions.shareChat);
 
         // $
+        // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
         const newRoom = {
           id: Math.floor(100000000 + Math.random() * 900000000),
           name: 'New Chat',
