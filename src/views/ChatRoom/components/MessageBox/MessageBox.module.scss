@@ -1,0 +1,40 @@
+.messageBox-container {
+    border-radius: 15px;
+    
+    letter-spacing: $letter-spacing;
+
+    // $ TODO -> make this responsive
+    width: 55%;
+    height: auto;
+    min-height: 4.5rem;
+
+    padding: 0.5rem;
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-items: flex-end;
+
+    margin-bottom: 1rem;
+
+    .messageBox-info {
+        display: flex;
+
+        text-transform: uppercase;
+        
+        .messageBox-sender {
+            font-weight: bold;
+
+            margin-right: 1rem;
+        }
+
+        .messageBox-time {
+
+        }
+
+
+    }
+
+    .messageBox-text {
+        align-self: center;
+    }
+}

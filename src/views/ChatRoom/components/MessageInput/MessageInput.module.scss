@@ -1,0 +1,29 @@
+.messageInput-container {
+    display: grid;
+    grid-template-columns: 1fr 4rem;
+    
+    .messageInput-input {
+        outline: 2px solid $pink-tertiary;
+        background-color: transparent;
+        border-radius: 15px;
+
+        font-size: $regular;
+        font-weight: 500;
+        letter-spacing: $letter-spacing;
+
+        padding: 0 1rem;
+
+        &::placeholder {
+            color: $pink-tertiary;
+        }
+    }
+
+    .messageInput-icon {
+        color: $pink-tertiary;
+
+        align-self: center;
+        justify-self: center;
+    }
+
+    
+}

@@ -60,9 +60,8 @@ function App() {
                 ></ProvidedElement>
               }
             />
+            <Route exact path={routes.chatRoom.path} element={<ChatRoom />} />
           </Route>
-
-          <Route exact path={routes.chatRoom.path} element={<ChatRoom />} />
 
           <Route path='*' element={<p>There's nothing here: 404!</p>} />
         </Routes>

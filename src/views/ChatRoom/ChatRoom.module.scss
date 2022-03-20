@@ -1,0 +1,18 @@
+.chatRoom-main {
+    display: grid;
+    place-items: center;
+
+    .chatRoom-container {
+        // $ TODO -> make this responsive
+        width: 95%;
+        height: 95%;
+
+        display: grid;
+        grid-template-rows: 1fr 3rem;
+
+        .chatRoom-messageContainer {
+            // $
+            // margin-right: 4rem;
+        }
+    }
+}
