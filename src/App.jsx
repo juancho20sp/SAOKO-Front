@@ -19,7 +19,7 @@ import {
   Home,
   CreateAccount,
   AllChats,
-  Boards,
+  AllBoards,
   Profile,
   ChatRoom,
 } from './views';
@@ -65,7 +65,7 @@ function App() {
                 <ProvidedElement
                   Context={ModalContext}
                   contextValue={{ setIsShowing, setModalType, modalOptions }}
-                  component={<Boards />}
+                  component={<AllBoards />}
                 ></ProvidedElement>
               }
             />

@@ -9,13 +9,15 @@ import { useNavigate } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { BsChatLeftDots } from 'react-icons/bs';
 
-const RoomCard = ({ id, name, path }) => {
+const RoomCard = ({ id, name, path, isChatCard }) => {
   const navigate = useNavigate();
 
   return (
     <div
       className={styles['roomCard-container']}
-      onClick={() => navigate(`${routes.chats.path}/${id}`)}
+      onClick={() =>
+        navigate(`${isChatCard ? routes.chats.path : routes.boards.path}/${id}`)
+      }
     >
       <IconContext.Provider value={{ size: '3.5rem' }}>
         <BsChatLeftDots />

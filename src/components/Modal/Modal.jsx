@@ -9,7 +9,7 @@ import { Button, RoomCode, Input } from './components';
 
 // Redux
 import { useDispatch } from 'react-redux';
-import { setNewRoomData } from '../../redux/slices/roomSlice';
+import { setNewChatRoom } from '../../redux/slices/roomSlice';
 
 const useModalType = (type, setModalType, setIsShowing, dispatch) => {
   const handleCloseModal = () => {
@@ -29,7 +29,7 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
           path: 'new-chat',
         };
 
-        dispatch(setNewRoomData(newRoom));
+        dispatch(setNewChatRoom(newRoom));
       };
 
       const handleUseChatCode = () => {
@@ -68,6 +68,63 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
             handleClick={handleCloseModal}
           />
           <Button title={modalOptions.enterChat.secondRow.secondOption.title} />
+        </div>,
+      ];
+
+    // ----
+    case modalOptions.createBoard:
+      const handleCreateBoard = () => {
+        setModalType(modalOptions.shareBoard);
+
+        // $
+        // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
+        const newRoom = {
+          id: Math.floor(100000000 + Math.random() * 900000000),
+          name: 'New Chat',
+          path: 'new-chat',
+        };
+
+        dispatch(setNewChatRoom(newRoom));
+      };
+
+      const handleUseBoardCode = () => {
+        setModalType(modalOptions.enterBoard);
+      };
+
+      return [
+        modalOptions.createBoard.title,
+        <Button
+          title={modalOptions.createBoard.firstRow.title}
+          handleClick={handleCreateBoard}
+        />,
+        <Button
+          title={modalOptions.createBoard.secondRow.title}
+          handleClick={handleUseBoardCode}
+        />,
+      ];
+
+    case modalOptions.shareBoard:
+      return [
+        modalOptions.shareBoard.title,
+        <RoomCode />,
+        <Button
+          title={modalOptions.shareBoard.secondRow.title}
+          handleClick={handleCloseModal}
+        />,
+      ];
+
+    case modalOptions.enterBoard:
+      return [
+        modalOptions.enterBoard.title,
+        <Input />,
+        <div className={styles['modal-row_inputActions']}>
+          <Button
+            title={modalOptions.enterBoard.secondRow.firstOption.title}
+            handleClick={handleCloseModal}
+          />
+          <Button
+            title={modalOptions.enterBoard.secondRow.secondOption.title}
+          />
         </div>,
       ];
     default:
