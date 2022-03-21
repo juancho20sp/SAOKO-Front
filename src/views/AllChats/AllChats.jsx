@@ -25,7 +25,7 @@ const AllChats = () => {
     <Layout>
       <main className={styles['chats-container']}>
         {cards.map((card) => (
-          <RoomCard key={card.id} {...card} />
+          <RoomCard key={card.id} isChatCard={true} {...card} />
         ))}
         <AddRoom
           handleClick={() =>
