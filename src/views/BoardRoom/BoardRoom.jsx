@@ -15,23 +15,20 @@ const itemsFromBackend = [
   { id: uuidv4(), content: 'Second task' },
 ];
 
-const columnsFromBackend = [
-  {
-    id: uuidv4(),
+const columnsFromBackend = {
+  [uuidv4()]: {
     name: 'To Do',
     items: itemsFromBackend,
   },
-  {
-    id: uuidv4(),
+  [uuidv4()]: {
     name: 'In Progress',
     items: [],
   },
-  {
-    id: uuidv4(),
+  [uuidv4()]: {
     name: 'Done',
     items: [],
   },
-];
+};
 
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) {
@@ -85,26 +82,27 @@ const BoardRoom = () => {
   // Columns
   const [columns, setColumns] = useState(columnsFromBackend);
 
-  // $
   const handleAddTask = () => {
     const newTask = {
       id: uuidv4(),
       content: 'New task',
     };
 
-    // $
-    debugger;
-
     const todoColumnId = Object.entries(columns).filter(
       ([id, columns]) => columns.name === 'To Do'
     )[0][0];
 
-    // const todoColumnId = todoColumn[0];
+    const items = [...columns[todoColumnId].items];
 
-    const newCol = { ...columns[todoColumnId] };
-    newCol.items = [...newCol.items, newTask];
+    const newItems = [...items, newTask];
 
-    setColumns({ ...columns, newCol });
+    setColumns({
+      ...columns,
+      [todoColumnId]: {
+        ...columns[todoColumnId],
+        items: newItems,
+      },
+    });
   };
 
   return (
@@ -128,9 +126,6 @@ const BoardRoom = () => {
               onDragEnd={(res) => onDragEnd(res, columns, setColumns)}
             >
               {Object.entries(columns).map(([id, column]) => {
-                {
-                  /* {columns.length > 0 && columns.map(({id, column}) => { */
-                }
                 console.log(column);
                 return (
                   <ColumnContainer key={id} title={column.name}>
