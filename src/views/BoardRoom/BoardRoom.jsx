@@ -15,20 +15,23 @@ const itemsFromBackend = [
   { id: uuidv4(), content: 'Second task' },
 ];
 
-const columnsFromBackend = {
-  [uuidv4()]: {
+const columnsFromBackend = [
+  {
+    id: uuidv4(),
     name: 'To Do',
     items: itemsFromBackend,
   },
-  [uuidv4()]: {
+  {
+    id: uuidv4(),
     name: 'In Progress',
     items: [],
   },
-  [uuidv4()]: {
+  {
+    id: uuidv4(),
     name: 'Done',
     items: [],
   },
-};
+];
 
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) {
@@ -82,6 +85,28 @@ const BoardRoom = () => {
   // Columns
   const [columns, setColumns] = useState(columnsFromBackend);
 
+  // $
+  const handleAddTask = () => {
+    const newTask = {
+      id: uuidv4(),
+      content: 'New task',
+    };
+
+    // $
+    debugger;
+
+    const todoColumnId = Object.entries(columns).filter(
+      ([id, columns]) => columns.name === 'To Do'
+    )[0][0];
+
+    // const todoColumnId = todoColumn[0];
+
+    const newCol = { ...columns[todoColumnId] };
+    newCol.items = [...newCol.items, newTask];
+
+    setColumns({ ...columns, newCol });
+  };
+
   return (
     <Layout>
       <div className={styles['boardRoom-main']}>
@@ -95,7 +120,7 @@ const BoardRoom = () => {
               Nombre del tablero
             </h2>
 
-            <CreateTask text={'Crear tarea'} />
+            <CreateTask text={'Crear tarea'} handleClick={handleAddTask} />
           </header>
 
           <div className={styles['boardRoom-content']}>
@@ -103,9 +128,12 @@ const BoardRoom = () => {
               onDragEnd={(res) => onDragEnd(res, columns, setColumns)}
             >
               {Object.entries(columns).map(([id, column]) => {
+                {
+                  /* {columns.length > 0 && columns.map(({id, column}) => { */
+                }
                 console.log(column);
                 return (
-                  <ColumnContainer title={column.name}>
+                  <ColumnContainer key={id} title={column.name}>
                     <Droppable droppableId={id} key={id}>
                       {/* Snapshot: the thing i'm dragging */}
                       {(provided, snapshot) => {
