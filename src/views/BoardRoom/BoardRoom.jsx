@@ -78,6 +78,52 @@ const onDragEnd = (result, columns, setColumns) => {
   }
 };
 
+const ColumnContainer = ({ title, children }) => {
+  return (
+    <div className={styles['boardRoom-columnContainer']}>
+      <h2 className={styles['boardRoom-column_title']}>{title}</h2>
+      {children}
+    </div>
+  );
+};
+
+const Column = ({ reference, snapshot, droppableProps, children }) => {
+  <div
+    {...droppableProps}
+    // $
+    className={styles['boardRoom-column']}
+    ref={reference}
+    style={{
+      background: snapshot.isDraggingOver ? '#FDE2FF' : '',
+    }}
+  >
+    {children}
+  </div>;
+};
+
+const ColumnItem = ({
+  reference,
+  children,
+  draggableProps,
+  dragHandleProps,
+  snapshot,
+  providedDraggablePropsStyle,
+}) => {
+  <div
+    className={styles['boardRoom-column_item']}
+    ref={reference}
+    {...draggableProps}
+    {...dragHandleProps}
+    style={{
+      backgroundColor: snapshot.isDragging ? '#8884FF' : '',
+      color: snapshot.isDragging ? 'white' : '',
+      ...providedDraggablePropsStyle,
+    }}
+  >
+    {children}
+  </div>;
+};
+
 const BoardRoom = () => {
   // Columns
   const [columns, setColumns] = useState(columnsFromBackend);
@@ -105,10 +151,7 @@ const BoardRoom = () => {
               {Object.entries(columns).map(([id, column]) => {
                 console.log(column);
                 return (
-                  <div className={styles['boardRoom-columnContainer']}>
-                    <h2 className={styles['boardRoom-column_title']}>
-                      {column.name}
-                    </h2>
+                  <ColumnContainer title={column.name}>
                     <Droppable droppableId={id} key={id}>
                       {/* Snapshot: the thing i'm dragging */}
                       {(provided, snapshot) => {
@@ -163,7 +206,7 @@ const BoardRoom = () => {
                         );
                       }}
                     </Droppable>
-                  </div>
+                  </ColumnContainer>
                 );
               })}
             </DragDropContext>
