@@ -33,6 +33,11 @@ const routes = {
         id: 6,
         path: '/chats/:id',
         name: 'chatRoom'
+    },
+    boardRoom: {
+        id: 7,
+        path: '/boards/:id',
+        name: 'boardRoom'
     }
 }
 

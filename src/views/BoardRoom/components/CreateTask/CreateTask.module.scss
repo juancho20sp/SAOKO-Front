@@ -1,0 +1,16 @@
+.createTask-button {
+    border-radius: $border-radius;
+
+    text-transform: uppercase;
+    background-color: $pink-secondary;
+    color: $dark-gray;
+
+    width: 9rem;
+
+    box-shadow: 2px 2px 5px $black;
+
+    &:hover {
+        background-color: rgba($color: $pink-secondary, $alpha: 0.7);
+        cursor: pointer;
+    }
+}

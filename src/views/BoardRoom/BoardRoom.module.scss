@@ -1,0 +1,83 @@
+.boardRoom-main {
+    margin: 1.6rem;
+
+    .boardRoom-container {
+        height: 100%;
+        width: 100%;
+
+        display: grid;
+        grid-template-rows: auto 1fr;
+
+        .boardRoom-header {
+            margin-bottom: 1rem;
+
+            display: flex;
+            justify-content: space-between;
+
+            .boardRoom-header_title {
+                text-transform: uppercase;
+                color: $pink-primary;
+                font-size: $medium;
+                letter-spacing: $letter-spacing;
+            }
+        }
+
+        .boardRoom-content {
+            background-color: red;
+            width: 100%;
+            height: 100%;
+
+            // display: flex;
+            // // flex-direction: column;
+            // // justify-content: space-between;
+            // justify-content: center;
+
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 1.6rem;
+
+            .boardRoom-columnContainer {
+                background-color: green;
+
+                // display: flex;
+                // flex-direction: column;
+                // align-items: center;
+
+                display: grid;
+                grid-template-rows: auto 1fr;
+                // place-items: center;
+
+                // margin: 0 1rem
+
+                .boardRoom-column_title {
+                    text-transform: uppercase;
+                    font-weight: 300;
+                    color: $pink-primary;
+                    letter-spacing: $letter-spacing;
+
+                    justify-self: center;
+                }
+
+                .boardRoom-column {
+                    // border-radius: 15px;
+                    background-color: $pink-primary;
+                    padding: 0.3rem;
+                    // padding-top: 0.8rem;
+
+                    .boardRoom-column_item {
+                        background-color: $pink-secondary;
+                        border: 1px solid $dark-gray;
+                        // border-radius: 15px;
+                        color: $dark-gray;
+
+                        user-select: none;
+                        padding: 1rem;
+                        margin-bottom: 0.5rem;
+
+                        min-height: 3rem;
+                    }
+                }
+            }
+        }
+    }
+}

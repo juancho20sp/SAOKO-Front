@@ -22,6 +22,7 @@ import {
   AllBoards,
   Profile,
   ChatRoom,
+  BoardRoom,
 } from './views';
 
 // Context
@@ -70,6 +71,7 @@ function App() {
               }
             />
             <Route exact path={routes.chatRoom.path} element={<ChatRoom />} />
+            <Route exact path={routes.boardRoom.path} element={<BoardRoom />} />
           </Route>
 
           <Route path='*' element={<p>There's nothing here: 404!</p>} />
