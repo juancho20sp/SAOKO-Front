@@ -88,17 +88,19 @@ const ColumnContainer = ({ title, children }) => {
 };
 
 const Column = ({ reference, snapshot, droppableProps, children }) => {
-  <div
-    {...droppableProps}
-    // $
-    className={styles['boardRoom-column']}
-    ref={reference}
-    style={{
-      background: snapshot.isDraggingOver ? '#FDE2FF' : '',
-    }}
-  >
-    {children}
-  </div>;
+  return (
+    <div
+      {...droppableProps}
+      // $
+      className={styles['boardRoom-column']}
+      ref={reference}
+      style={{
+        background: snapshot.isDraggingOver ? '#FDE2FF' : '',
+      }}
+    >
+      {children}
+    </div>
+  );
 };
 
 const ColumnItem = ({
@@ -109,19 +111,21 @@ const ColumnItem = ({
   snapshot,
   providedDraggablePropsStyle,
 }) => {
-  <div
-    className={styles['boardRoom-column_item']}
-    ref={reference}
-    {...draggableProps}
-    {...dragHandleProps}
-    style={{
-      backgroundColor: snapshot.isDragging ? '#8884FF' : '',
-      color: snapshot.isDragging ? 'white' : '',
-      ...providedDraggablePropsStyle,
-    }}
-  >
-    {children}
-  </div>;
+  return (
+    <div
+      className={styles['boardRoom-column_item']}
+      ref={reference}
+      {...draggableProps}
+      {...dragHandleProps}
+      style={{
+        backgroundColor: snapshot.isDragging ? '#8884FF' : '',
+        color: snapshot.isDragging ? 'white' : '',
+        ...providedDraggablePropsStyle,
+      }}
+    >
+      {children}
+    </div>
+  );
 };
 
 const BoardRoom = () => {
@@ -156,16 +160,10 @@ const BoardRoom = () => {
                       {/* Snapshot: the thing i'm dragging */}
                       {(provided, snapshot) => {
                         return (
-                          <div
-                            {...provided.droppableProps}
-                            // $
-                            className={styles['boardRoom-column']}
-                            ref={provided.innerRef}
-                            style={{
-                              background: snapshot.isDraggingOver
-                                ? '#FDE2FF'
-                                : '',
-                            }}
+                          <Column
+                            reference={provided.innerRef}
+                            snapshot={snapshot}
+                            droppableProps={provided.droppableProps}
                           >
                             {column.items.map((item, idx) => {
                               return (
@@ -176,25 +174,19 @@ const BoardRoom = () => {
                                 >
                                   {(provided, snapshot) => {
                                     return (
-                                      <div
-                                        className={
-                                          styles['boardRoom-column_item']
+                                      <ColumnItem
+                                        reference={provided.innerRef}
+                                        draggableProps={provided.draggableProps}
+                                        dragHandleProps={
+                                          provided.dragHandleProps
                                         }
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        style={{
-                                          backgroundColor: snapshot.isDragging
-                                            ? '#8884FF'
-                                            : '',
-                                          color: snapshot.isDragging
-                                            ? 'white'
-                                            : '',
-                                          ...provided.draggableProps.style,
-                                        }}
+                                        snapshot={snapshot}
+                                        providedDraggablePropsStyle={
+                                          provided.draggableProps.style
+                                        }
                                       >
                                         {item.content}
-                                      </div>
+                                      </ColumnItem>
                                     );
                                   }}
                                 </Draggable>
@@ -202,7 +194,7 @@ const BoardRoom = () => {
                             })}
 
                             {provided.placeholder}
-                          </div>
+                          </Column>
                         );
                       }}
                     </Droppable>
