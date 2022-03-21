@@ -1,0 +1,11 @@
+.boardRoom-column_item {
+    background-color: $pink-secondary;
+    border: 1px solid $dark-gray;
+    color: $dark-gray;
+
+    margin-bottom: 0.5rem;
+    user-select: none;
+    padding: 1rem;
+
+    min-height: 3rem;
+}

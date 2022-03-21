@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './BoardRoom.module.scss';
 
 // Components
-import { CreateTask } from './components/';
+import { CreateTask, ColumnContainer, Column, ColumnItem } from './components/';
 import { Layout } from '../../components';
 
 // Drag and drop
@@ -76,56 +76,6 @@ const onDragEnd = (result, columns, setColumns) => {
       },
     });
   }
-};
-
-const ColumnContainer = ({ title, children }) => {
-  return (
-    <div className={styles['boardRoom-columnContainer']}>
-      <h2 className={styles['boardRoom-column_title']}>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-const Column = ({ reference, snapshot, droppableProps, children }) => {
-  return (
-    <div
-      {...droppableProps}
-      // $
-      className={styles['boardRoom-column']}
-      ref={reference}
-      style={{
-        background: snapshot.isDraggingOver ? '#FDE2FF' : '',
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-const ColumnItem = ({
-  reference,
-  children,
-  draggableProps,
-  dragHandleProps,
-  snapshot,
-  providedDraggablePropsStyle,
-}) => {
-  return (
-    <div
-      className={styles['boardRoom-column_item']}
-      ref={reference}
-      {...draggableProps}
-      {...dragHandleProps}
-      style={{
-        backgroundColor: snapshot.isDragging ? '#8884FF' : '',
-        color: snapshot.isDragging ? 'white' : '',
-        ...providedDraggablePropsStyle,
-      }}
-    >
-      {children}
-    </div>
-  );
 };
 
 const BoardRoom = () => {

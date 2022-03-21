@@ -1,0 +1,13 @@
+.boardRoom-columnContainer {
+    display: grid;
+    grid-template-rows: auto 1fr;
+
+    .boardRoom-column_title {
+        letter-spacing: $letter-spacing;
+        text-transform: uppercase;
+        color: $pink-primary;
+        font-weight: 300;
+
+        justify-self: center;
+    }
+}
