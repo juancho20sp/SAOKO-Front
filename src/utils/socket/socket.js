@@ -1,18 +1,18 @@
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
-// Socket host direction
-// const socketHost = 'http://localhost:9092/chat';
-// const socket = io(socketHost, {
-//     transports: ['polling', 'websocket']
-// });
+// // Socket host direction
+// // const socketHost = 'http://localhost:9092/chat';
+// // const socket = io(socketHost, {
+// //     transports: ['polling', 'websocket']
+// // });
 
-// debugger;
+// // debugger;
 
-// const socket = io('http://localhost:9092/chat?token=abc123', {
-const socket = io('http://localhost:9092', {
-    transports: ['polling', 'websocket']
-})
+// // const socket = io('http://localhost:9092/chat?token=abc123', {
+// // const socket = io('http://localhost:9092', {
+// //     transports: ['polling', 'websocket']
+// // })
 
-console.log(socket);
+// console.log(socket);
 
-export default socket;
+// export default socket;

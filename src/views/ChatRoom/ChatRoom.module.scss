@@ -2,15 +2,33 @@
     display: grid;
     place-items: center;
 
+    height: 100%;
+    max-height: 100%;
+     
+    overflow: hidden;
+    
+
+    // overflow-y: auto;
+    
     .chatRoom-container {
         // $ TODO -> make this responsive
         width: 95%;
         height: 95%;
+    
+        // max-height: 100%;
+        // overflow-y: scroll;
 
         display: grid;
         grid-template-rows: 1fr 3rem;
 
+        // overflow-y: auto;
+// 
         .chatRoom-messageContainer {
+            // position: relative;
+
+            background-color: red;
+            max-height: 100%;
+            // overflow-y: scroll;
         }
     }
 }

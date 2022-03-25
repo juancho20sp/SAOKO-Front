@@ -1,12 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './ChatRoom.module.scss';
 
+// Routing
+import { useLocation } from 'react-router-dom';
+
+// State Management
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  addMessageToChatRoom,
+  setConnected,
+} from '../../redux/slices/roomSlice';
+
 // Components
 import { MessageInput, MessageBox } from './components';
 import { Layout } from '../../components';
 
 // Utils
 import { socket } from '../../utils';
+import { over } from 'stompjs';
+import SockJS from 'sockjs-client';
 
 // TODO -> message sent must be handed by hook
 const chats = [
@@ -25,113 +37,131 @@ const chats = [
   },
 ];
 
-const ChatRoom = () => {
-  // ---------------------- REAL TIME LOGIC ----------------------
-  //   const [socket, setSocket] = useState();
-  const [message, setMessage] = useState('');
-  const [allMessages, setAllMessages] = useState([]);
+var stompClient = null;
 
-  // $
-  const [name, setName] = useState(
-    'user #' + Math.floor(Math.random() * 1000 + 1)
+/**
+ * TODO
+ * Assign the room code using the path
+ * Send all the messages to the room
+ */
+
+const ChatRoom = () => {
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+  const path = pathname.split('/')[2];
+
+  const username = useSelector((state) => state.login.username);
+  const isConnected = useSelector(
+    (state) =>
+      state.room.chatRooms.filter((room) => room.path === path)[0].isConnected
+  );
+  const allMessages = useSelector(
+    (state) =>
+      state.room.chatRooms.filter((room) => room.path === path)[0].messages
   );
 
-  // CONNECT
+  // TODO
+  // CONSTANTS
+  const URL = 'http://localhost:8080/ws';
+
+  // const [allMessages, setAllMessages] = useState([]);
+  const [message, setMessage] = useState('');
+  const [receiverName, setReceiverName] = useState(path);
+  // const [username, setUsername] = useState(
+  //   `user #${Math.floor(Math.random() * 1000 + 1)}`
+  // );
+  // const [isConnected, setIsConnected] = useState(false);
+
   useEffect(() => {
-    // $
-    // debugger;
+    if (username && receiverName) {
+      connect();
+    }
+  }, [username, receiverName]);
 
-    socket.on('connect', function () {
-      console.log('user connected');
-
-      const adminMessage = {
-        id: Math.floor(100000000 + Math.random() * 900000000),
-        username: 'ADMIN',
-        message: `${name} ha entrado al chat`,
-        // time: new Date().toLocaleString(),
-        time: new Date().toLocaleTimeString(),
-      };
-
-      socket.emit('chat', adminMessage);
-      setAllMessages([...allMessages, adminMessage]);
-    });
-
-    socket.on('disconnect', function () {
-      console.log('user disconnected');
-
-      const adminMessage = {
-        id: Math.floor(100000000 + Math.random() * 900000000),
-        username: 'ADMIN',
-        message: `${name} ha salido del chat`,
-        time: new Date().toLocaleTimeString(),
-      };
-
-      setAllMessages([...allMessages, adminMessage]);
-    });
-
-    socket.on('chat', (message) => {
-      // $
-      //   debugger;
-      message.username === name
-        ? (message.messageSent = true)
-        : (message.messageSent = false);
-
-      setAllMessages([...allMessages, message]);
-    });
-  }, []);
-
-  // SEND MESSAGE
-  const sendMessage = () => {
-    // event.preventDefault();
-
-    // debugger;
-
-    // messageSent, sender, time, text
-    const myObject = {
-      id: Math.floor(100000000 + Math.random() * 900000000),
-      username: name,
-      message,
-      time: new Date().toLocaleTimeString(),
-    };
-
-    socket.emit('chat', myObject);
-
-    setMessage('');
-  };
-
-  // NEW MESSAGES
   useEffect(() => {
-    socket.on('chat', (message) => {
-      // $
-      //   debugger;
-      message.username === name
-        ? (message.messageSent = true)
-        : (message.messageSent = false);
-
-      setAllMessages([...allMessages, message]);
-    });
-
-    return () => {
-      socket.off();
-    };
+    debugger;
   }, [allMessages]);
 
-  // AUTO SCROLL
-  //   const divRef = useRef(null);
-  //   useEffect(() => {
-  //     divRef.current.scrollIntoView({ behavior: 'smooth' });
-  //   });
+  const connect = () => {
+    const sock = new SockJS(URL);
 
-  //   function sendDisconnect() {
-  //     socket.disconnect();
-  //   }
+    stompClient = over(sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  const userJoin = () => {
+    if (!username) {
+      return;
+    }
+
+    // $
+    debugger;
+
+    if (!isConnected) {
+      dispatch(
+        setConnected({
+          path: path,
+          isConnected: true,
+        })
+      );
+
+      const chatMessage = {
+        // TODO -> Exteriorize this
+        senderName: 'ADMIN',
+        message: `${username} ha entrado al chat`,
+        receiverName: receiverName,
+        status: 'JOIN',
+      };
+
+      stompClient.send('/app/private-message', {}, JSON.stringify(chatMessage));
+    }
+  };
+
+  const sendPrivateValue = () => {
+    if (stompClient) {
+      const chatMessage = {
+        senderName: username,
+        receiverName: receiverName,
+        message: message,
+        status: 'MESSAGE',
+      };
+
+      //$
+      debugger;
+
+      stompClient.send('/app/private-message', {}, JSON.stringify(chatMessage));
+      setMessage('');
+    }
+  };
+
+  // EVENTS
+  const onConnected = () => {
+    stompClient.subscribe(
+      '/user/' + receiverName + '/private',
+      onPrivateMessage
+    );
+    userJoin();
+  };
+
+  const onError = (err) => {
+    console.log(err);
+  };
+
+  const onPrivateMessage = (payload) => {
+    console.log(payload);
+
+    const payloadData = JSON.parse(payload.body);
+    // $
+    debugger;
+    dispatch(addMessageToChatRoom(payloadData));
+  };
 
   // -------------------------------------------------------------
 
   const messageInputProps = {
     message: message,
     setMessage: setMessage,
-    sendMessage: sendMessage,
+    sendMessage: sendPrivateValue,
   };
 
   return (
@@ -139,10 +169,12 @@ const ChatRoom = () => {
       <div className={styles['chatRoom-main']}>
         <div className={styles['chatRoom-container']}>
           <div className={styles['chatRoom-messageContainer']}>
-            {allMessages.length > 0 &&
+            {
+              // allMessages.length > 0 &&
               allMessages.map((message) => (
                 <MessageBox key={message.id} {...message} />
-              ))}
+              ))
+            }
           </div>
           <MessageInput {...messageInputProps} />
         </div>

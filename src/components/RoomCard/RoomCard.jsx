@@ -16,7 +16,9 @@ const RoomCard = ({ id, name, path, isChatCard }) => {
     <div
       className={styles['roomCard-container']}
       onClick={() =>
-        navigate(`${isChatCard ? routes.chats.path : routes.boards.path}/${id}`)
+        navigate(
+          `${isChatCard ? routes.chats.path : routes.boards.path}/${path}`
+        )
       }
     >
       <IconContext.Provider value={{ size: '3.5rem' }}>

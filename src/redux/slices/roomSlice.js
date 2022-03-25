@@ -10,16 +10,22 @@ export const roomSlice = createSlice({
                 id: 0,
                 name: 'Chat 1',
                 path: 'chat-one',
+                messages: [],
+                isConnected: false,
               },
               {
                 id: 1,
                 name: 'Chat 2',
                 path: 'chat-two',
+                messages: [],
+                isConnected: false,
               },
               {
                 id: 2,
                 name: 'Chat 3',
                 path: 'chat-three',
+                messages: [],
+                isConnected: false,
               },
         ],
         boardRooms: [
@@ -48,11 +54,30 @@ export const roomSlice = createSlice({
         setNewChatRoom: (state, action) => {
             state.chatRooms = [...state.chatRooms, action.payload];
         },
-        clearNewRoomData: (state) => {
-            state.newRoom = {};
+        addMessageToChatRoom: (state, action) => {
+          // $
+          debugger;
+          const room = state.chatRooms.filter(room => room.path === action.payload.receiverName)[0];
+
+          const idx = state.chatRooms.findIndex(room => room.path === action.payload.receiverName)
+          // room.messages.push(action.payload);
+
+          state.chatRooms[idx] = {...room,
+            messages: [...room.messages, action.payload]
+          };
+        },
+        setConnected: (state, action) => {
+          const room = state.chatRooms.filter(room => room.path === action.payload.path)[0];
+
+          const idx = state.chatRooms.findIndex(room => room.path === action.payload.path)
+
+          state.chatRooms[idx] = {...room,
+            isConnected: action.payload.isConnected
+          };
         }
+
     }
 });
 
-export const { setNewChatRoom, clearNewRoomData, setChatRooms } = roomSlice.actions;
+export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected } = roomSlice.actions;
 export default roomSlice.reducer;
