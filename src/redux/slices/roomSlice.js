@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export const CHAT = 'CHAT';
+export const BOARD = 'BOARD';
+
 export const roomSlice = createSlice({
     name: 'room',
     initialState: {
@@ -33,16 +36,22 @@ export const roomSlice = createSlice({
                 id: 0,
                 name: 'Board 1',
                 path: 'board-one',
+                cards: [],
+                isConnected: false,
               },
               {
                 id: 1,
                 name: 'Board 2',
                 path: 'board-two',
+                cards: [],
+                isConnected: false,
               },
               {
                 id: 2,
                 name: 'Board 3',
                 path: 'board-three',
+                cards: [],
+                isConnected: false,
               },
         ],
         newRoom: {}
@@ -54,6 +63,11 @@ export const roomSlice = createSlice({
         setNewChatRoom: (state, action) => {
             state.chatRooms = [...state.chatRooms, action.payload];
         },
+
+        // $
+        // TODO
+        // -------------------------
+
         addMessageToChatRoom: (state, action) => {
           // $
           debugger;
@@ -66,12 +80,34 @@ export const roomSlice = createSlice({
             messages: [...room.messages, action.payload]
           };
         },
+
         setConnected: (state, action) => {
-          const room = state.chatRooms.filter(room => room.path === action.payload.path)[0];
+          // $
+          debugger;
 
-          const idx = state.chatRooms.findIndex(room => room.path === action.payload.path)
+          let rooms;
+          let roomLabel;
 
-          state.chatRooms[idx] = {...room,
+          switch(action.payload.type){
+            case CHAT:
+              rooms = state.chatRooms;
+              roomLabel = 'chatRooms';
+              break;
+
+            case BOARD:
+              rooms = state.boardRooms;
+              roomLabel = 'boardRooms';
+              break;
+
+            default:
+
+          }
+
+          const room = rooms.filter(room => room.path === action.payload.path)[0];
+
+          const idx = rooms.findIndex(room => room.path === action.payload.path)
+
+          state[roomLabel][idx] = {...room,
             isConnected: action.payload.isConnected
           };
         }

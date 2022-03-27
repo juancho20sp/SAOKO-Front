@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './BoardRoom.module.scss';
+
+// Routing
+import { useLocation } from 'react-router-dom';
+
+// State Management
+import { useDispatch, useSelector } from 'react-redux';
+import { setConnected, BOARD } from '../../redux/slices/roomSlice';
 
 // Components
 import { CreateTask, ColumnContainer, Column, ColumnItem } from './components/';
@@ -8,23 +15,33 @@ import { Layout } from '../../components';
 // Drag and drop
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { v4 as uuidv4 } from 'uuid';
+import { connect } from 'net';
+
+// Utils
+import { socket } from '../../utils';
+import { over } from 'stompjs';
+import SockJS from 'sockjs-client';
 
 // $
+const TO_DO = 'TO_DO';
+const IN_PROGRESS = 'IN_PROGRESS';
+const DONE = 'DONE';
+
 const itemsFromBackend = [
-  { id: uuidv4(), content: 'First task' },
-  { id: uuidv4(), content: 'Second task' },
+  { id: uuidv4(), content: 'First task', status: TO_DO },
+  { id: uuidv4(), content: 'Second task', status: TO_DO },
 ];
 
 const columnsFromBackend = {
-  [uuidv4()]: {
+  TO_DO: {
     name: 'To Do',
-    items: itemsFromBackend,
+    items: [],
   },
-  [uuidv4()]: {
+  IN_PROGRESS: {
     name: 'In Progress',
     items: [],
   },
-  [uuidv4()]: {
+  DONE: {
     name: 'Done',
     items: [],
   },
@@ -78,31 +95,131 @@ const onDragEnd = (result, columns, setColumns) => {
   }
 };
 
+var stompClient = null;
+
 const BoardRoom = () => {
-  // Columns
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+  const path = pathname.split('/')[2];
+
+  // ------------- REAL TIME LOGIC ----------
+  // TODO
+  // CONSTANTS
+  const URL = 'http://localhost:8080/ws';
+
+  // States
+  const [roomId, setRoomId] = useState(path);
   const [columns, setColumns] = useState(columnsFromBackend);
 
-  const handleAddTask = () => {
-    const newTask = {
-      id: uuidv4(),
-      content: 'New task',
-    };
+  // Redux
+  const username = useSelector((state) => state.login.username);
+  const isConnected = useSelector(
+    (state) =>
+      state.room.boardRooms.filter((room) => room.path === path)[0].isConnected
+  );
 
-    const todoColumnId = Object.entries(columns).filter(
-      ([id, columns]) => columns.name === 'To Do'
-    )[0][0];
+  useEffect(() => {
+    // $
+    debugger;
 
-    const items = [...columns[todoColumnId].items];
+    if (roomId) {
+      connect();
+    }
+  }, [roomId]);
 
-    const newItems = [...items, newTask];
+  const connect = () => {
+    const sock = new SockJS(URL);
+
+    stompClient = over(sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  const userJoin = () => {
+    // $
+    debugger;
+
+    if (!isConnected) {
+      dispatch(
+        setConnected({
+          type: BOARD,
+          path: path,
+          isConnected: true,
+        })
+      );
+    }
+  };
+
+  const createNewCard = () => {
+    if (stompClient) {
+      const newCard = {
+        id: uuidv4(),
+        roomId: roomId,
+        limitDate: 'HOY',
+        content: 'New Card',
+        cardStatus: 'TO_DO',
+      };
+
+      //$
+      debugger;
+
+      stompClient.send('/app/newCard', {}, JSON.stringify(newCard));
+    }
+  };
+
+  // EVENTS
+  const onConnected = () => {
+    stompClient.subscribe('/user/' + roomId + '/newCard', onNewCard);
+    stompClient.subscribe('/user/' + roomId + '/cardClicked', onCardClicked);
+    stompClient.subscribe('/user/' + roomId + '/moveCard', onCardMoved);
+
+    userJoin();
+  };
+
+  const onError = (err) => {
+    console.log(err);
+  };
+
+  const onNewCard = (payload) => {
+    console.log(payload);
+
+    const payloadData = JSON.parse(payload.body);
+
+    // $
+    debugger;
+
+    const items = [...columns['TO_DO'].items];
+
+    const newItems = [...items, payloadData];
 
     setColumns({
       ...columns,
-      [todoColumnId]: {
-        ...columns[todoColumnId],
+      TO_DO: {
+        ...columns['TO_DO'],
         items: newItems,
       },
     });
+  };
+
+  const onCardClicked = (payload) => {
+    console.log(payload);
+
+    const payloadData = JSON.parse(payload.body);
+    // $
+    debugger;
+  };
+
+  const onCardMoved = (payload) => {
+    console.log(payload);
+
+    const payloadData = JSON.parse(payload.body);
+    // $
+    debugger;
+  };
+
+  // -----------------------------------------
+
+  const handleAddTask = () => {
+    createNewCard();
   };
 
   return (

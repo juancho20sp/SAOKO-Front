@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   addMessageToChatRoom,
   setConnected,
+  CHAT,
 } from '../../redux/slices/roomSlice';
 
 // Components
@@ -100,6 +101,7 @@ const ChatRoom = () => {
     if (!isConnected) {
       dispatch(
         setConnected({
+          type: CHAT,
           path: path,
           isConnected: true,
         })
@@ -110,7 +112,7 @@ const ChatRoom = () => {
         senderName: 'ADMIN',
         message: `${username} ha entrado al chat`,
         receiverName: receiverName,
-        status: 'JOIN',
+        messageStatus: 'JOIN',
       };
 
       stompClient.send('/app/private-message', {}, JSON.stringify(chatMessage));
@@ -123,7 +125,7 @@ const ChatRoom = () => {
         senderName: username,
         receiverName: receiverName,
         message: message,
-        status: 'MESSAGE',
+        messageStatus: 'MESSAGE',
       };
 
       //$
