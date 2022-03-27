@@ -15,7 +15,8 @@ const MessageBox = ({ messageSent, senderName, time, message }) => {
             : '#D7BCE8',
 
         // ADMIN MESSAGES
-        width: senderName === 'ADMIN' ? '100%' : '',
+        width: senderName === 'ADMIN' ? '95%' : '',
+        margin: senderName === 'ADMIN' ? '15px auto' : '',
         minHeight: senderName === 'ADMIN' ? 'auto' : '',
         textAlign: senderName === 'ADMIN' ? 'center' : '',
       }}

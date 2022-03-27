@@ -1,4 +1,9 @@
 
 .App {
     background-color: $dark-gray;
+    max-height: 100vh;
+    max-width: 100vw;
+
+    // $
+    // overflow: auto;
 }

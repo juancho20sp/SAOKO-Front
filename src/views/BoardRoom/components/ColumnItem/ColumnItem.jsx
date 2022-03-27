@@ -9,6 +9,18 @@ const ColumnItem = ({
   snapshot,
   providedDraggablePropsStyle,
 }) => {
+  // $
+  // debugger;
+
+  // $
+  React.useEffect(() => {
+    if (snapshot.isDragging) {
+      // debugger;
+      console.log('dragging');
+      return;
+    }
+  }, [snapshot]);
+
   return (
     <div
       className={styles['boardRoom-column_item']}
@@ -20,6 +32,8 @@ const ColumnItem = ({
         color: snapshot.isDragging ? 'white' : '',
         ...providedDraggablePropsStyle,
       }}
+      // $
+      onDragStart={(ev) => console.log(ev)}
     >
       {children}
     </div>

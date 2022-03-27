@@ -47,54 +47,6 @@ const columnsFromBackend = {
   },
 };
 
-const onDragEnd = (result, columns, setColumns) => {
-  if (!result.destination) {
-    return;
-  }
-
-  const { source, destination } = result;
-
-  if (source.droppableId !== destination.droppableId) {
-    const sourceColumn = columns[source.droppableId];
-    const destinyColumn = columns[destination.droppableId];
-
-    const sourceItems = [...sourceColumn.items];
-    const destinyItems = [...destinyColumn.items];
-
-    const [removed] = sourceItems.splice(source.index, 1);
-
-    destinyItems.splice(destination.index, 0, removed);
-
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...sourceColumn,
-        items: sourceItems,
-      },
-      [destination.droppableId]: {
-        ...destinyColumn,
-        items: destinyItems,
-      },
-    });
-  } else {
-    const column = columns[source.droppableId];
-
-    const copiedItems = [...column.items];
-
-    const [removed] = copiedItems.splice(source.index, 1);
-
-    copiedItems.splice(destination.index, 0, removed);
-
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...column,
-        items: copiedItems,
-      },
-    });
-  }
-};
-
 var stompClient = null;
 
 const BoardRoom = () => {
@@ -110,6 +62,7 @@ const BoardRoom = () => {
   // States
   const [roomId, setRoomId] = useState(path);
   const [columns, setColumns] = useState(columnsFromBackend);
+  const [allCards, setAllCards] = useState(itemsFromBackend);
 
   // Redux
   const username = useSelector((state) => state.login.username);
@@ -117,6 +70,16 @@ const BoardRoom = () => {
     (state) =>
       state.room.boardRooms.filter((room) => room.path === path)[0].isConnected
   );
+
+  // $ -> CARDS TO COLUMNS
+  useEffect(() => {
+    // $
+    debugger;
+
+    if (allCards.length) {
+      allCards.forEach((card) => columns[card.status].items.push(card));
+    }
+  }, [columns, allCards]);
 
   useEffect(() => {
     // $
@@ -146,6 +109,74 @@ const BoardRoom = () => {
           isConnected: true,
         })
       );
+    }
+  };
+
+  const onDragStart = (cardId) => {
+    console.log(cardId);
+    console.log('start');
+    const card = allCards.filter((card) => card.id === cardId);
+
+    console.log(card);
+
+    stompClient.send('/app/cardClicked', {}, JSON.stringify(card));
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    const { source, destination, draggableId } = result;
+
+    // $
+    debugger;
+
+    // --------
+
+    if (source.droppableId !== destination.droppableId) {
+      // const sourceColumn = columns[source.droppableId];
+      // const destinyColumn = columns[destination.droppableId];
+
+      // const sourceItems = [...sourceColumn.items];
+      // const destinyItems = [...destinyColumn.items];
+
+      // const [removed] = sourceItems.splice(source.index, 1);
+
+      // destinyItems.splice(destination.index, 0, removed);
+
+      // setColumns({
+      //   ...columns,
+      //   [source.droppableId]: {
+      //     ...sourceColumn,
+      //     items: sourceItems,
+      //   },
+      //   [destination.droppableId]: {
+      //     ...destinyColumn,
+      //     items: destinyItems,
+      //   },
+      // });
+
+      const cards = [...allCards];
+      const card = cards.find((card) => card.id === draggableId);
+      card.status = destination.droppableId;
+
+      setAllCards([...cards]);
+    } else {
+      const column = columns[source.droppableId];
+
+      const copiedItems = [...column.items];
+
+      const [removed] = copiedItems.splice(source.index, 1);
+
+      copiedItems.splice(destination.index, 0, removed);
+
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          items: copiedItems,
+        },
+      });
     }
   };
 
@@ -183,6 +214,9 @@ const BoardRoom = () => {
     console.log(payload);
 
     const payloadData = JSON.parse(payload.body);
+
+    // $
+    console.log(payloadData);
 
     // $
     debugger;
@@ -240,7 +274,8 @@ const BoardRoom = () => {
 
           <div className={styles['boardRoom-content']}>
             <DragDropContext
-              onDragEnd={(res) => onDragEnd(res, columns, setColumns)}
+              onDragStart={({ draggableId }) => onDragStart(draggableId)}
+              onDragEnd={(res) => onDragEnd(res)}
             >
               {Object.entries(columns).map(([id, column]) => {
                 console.log(column);

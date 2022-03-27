@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
         </BrowserRouter>
         <Route></Route> */}
         {/* <WelcomeMessage /> */}
-        {children}
+        <div className={styles['layout-container__content']}>{children}</div>
       </div>
     </main>
   );

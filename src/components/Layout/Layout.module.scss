@@ -25,7 +25,21 @@
     }
 
     .layout-container {
+        // $
+        background-color: green;
+
+        max-height: 100%;
+        max-width: 100%;
+
         display: grid;
         grid-template-rows: auto 1fr;
+
+        // $
+        overflow: auto;
+
+        .layout-container__content {
+           width: 100%;
+           height: 100%;
+        }
     }
 }
