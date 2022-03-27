@@ -36,21 +36,60 @@ export const roomSlice = createSlice({
                 id: 0,
                 name: 'Board 1',
                 path: 'board-one',
-                cards: [],
+                columns: {
+                  TO_DO: {
+                    name: 'To Do',
+                    items: [],
+                  },
+                  IN_PROGRESS: {
+                    name: 'In Progress',
+                    items: [],
+                  },
+                  DONE: {
+                    name: 'Done',
+                    items: [],
+                  },
+                },
                 isConnected: false,
               },
               {
                 id: 1,
                 name: 'Board 2',
                 path: 'board-two',
-                cards: [],
+                columns: {
+                  TO_DO: {
+                    name: 'To Do',
+                    items: [],
+                  },
+                  IN_PROGRESS: {
+                    name: 'In Progress',
+                    items: [],
+                  },
+                  DONE: {
+                    name: 'Done',
+                    items: [],
+                  },
+                },
                 isConnected: false,
               },
               {
                 id: 2,
                 name: 'Board 3',
                 path: 'board-three',
-                cards: [],
+                columns: {
+                  TO_DO: {
+                    name: 'To Do',
+                    items: [],
+                  },
+                  IN_PROGRESS: {
+                    name: 'In Progress',
+                    items: [],
+                  },
+                  DONE: {
+                    name: 'Done',
+                    items: [],
+                  },
+                },
                 isConnected: false,
               },
         ],
@@ -110,10 +149,120 @@ export const roomSlice = createSlice({
           state[roomLabel][idx] = {...room,
             isConnected: action.payload.isConnected
           };
+        },
+
+        addCardToColumn: (state, action) => {
+          // from, to, card, path
+          // si no hay from, es porque es nueva
+          // $
+          debugger;
+          const { from, to, path, card } = action.payload;
+
+          let room = state.boardRooms.find(room => room.path === path);
+          const roomIdx = state.boardRooms.findIndex(room => room.path === path);
+          room = state.boardRooms[roomIdx];
+
+          
+          if (!from) {
+            const targetItems = [...room.columns.TO_DO.items];
+            room.columns.TO_DO.items = [...new Set([...targetItems, card])];
+          } else {
+            const targetItems = [...room.columns[to].items];
+
+            // Add the task to the new column
+            room.columns[to].items = [...targetItems, card];
+
+            // Remove the task from the source column
+            const sourceItems = [...room.columns[from].items];
+
+            const newItems = sourceItems.filter(oldCard => oldCard.id !== card.id);
+
+            room.columns[from].items = newItems;
+          }
+        },
+
+        moveCard: (state, action) => {
+          const { result, columns, path } = action.payload;
+
+          let room = state.boardRooms.find(room => room.path === path);
+          const roomIdx = state.boardRooms.findIndex(room => room.path === path);
+          room = state.boardRooms[roomIdx];
+
+
+          if (!result.destination) {
+            return;
+          }
+          const { source, destination, draggableId } = result;
+      
+          // $
+          debugger;
+      
+          // --------
+      
+          if (source.droppableId !== destination.droppableId) {
+            const sourceColumn = columns[source.droppableId];
+            const destinyColumn = columns[destination.droppableId];
+      
+            const sourceItems = [...sourceColumn.items];
+            const destinyItems = [...destinyColumn.items];
+      
+            const [removed] = sourceItems.splice(source.index, 1);
+      
+            destinyItems.splice(destination.index, 0, removed);
+      
+
+            room.columns = {
+              ...room.columns,
+              [source.droppableId]: {
+                ...sourceColumn,
+                items: [...new Set(sourceItems)],
+              },
+              [destination.droppableId]: {
+                ...destinyColumn,
+                items: [...new Set(destinyItems)],
+              },
+            }
+            // setColumns({
+            //   ...columns,
+            //   [source.droppableId]: {
+            //     ...sourceColumn,
+            //     items: sourceItems,
+            //   },
+            //   [destination.droppableId]: {
+            //     ...destinyColumn,
+            //     items: destinyItems,
+            //   },
+            // });
+          } else {
+            const column = columns[source.droppableId];
+      
+            const copiedItems = [...column.items];
+      
+            const [removed] = copiedItems.splice(source.index, 1);
+      
+            copiedItems.splice(destination.index, 0, removed);
+      
+
+            room.columns = {
+              ...room.columns,
+              [source.droppableId]: {
+                ...column,
+                items: copiedItems,
+              },
+            }
+
+            // setColumns({
+            //   ...columns,
+            //   [source.droppableId]: {
+            //     ...column,
+            //     items: copiedItems,
+            //   },
+            // });
+          }
         }
 
     }
 });
 
-export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected } = roomSlice.actions;
+export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard } = roomSlice.actions;
 export default roomSlice.reducer;

@@ -6,7 +6,12 @@ import { useLocation } from 'react-router-dom';
 
 // State Management
 import { useDispatch, useSelector } from 'react-redux';
-import { setConnected, BOARD } from '../../redux/slices/roomSlice';
+import {
+  setConnected,
+  BOARD,
+  addCardToColumn,
+  moveCard,
+} from '../../redux/slices/roomSlice';
 
 // Components
 import { CreateTask, ColumnContainer, Column, ColumnItem } from './components/';
@@ -59,9 +64,15 @@ const BoardRoom = () => {
   // CONSTANTS
   const URL = 'http://localhost:8080/ws';
 
+  const columns = useSelector(
+    (state) =>
+      state.room.boardRooms.filter((room) => room.path === path)[0].columns
+  );
+
   // States
   const [roomId, setRoomId] = useState(path);
-  const [columns, setColumns] = useState(columnsFromBackend);
+  // const [columns, setColumns] = useState(reduxColumns);
+
   const [allCards, setAllCards] = useState(itemsFromBackend);
 
   // Redux
@@ -71,16 +82,6 @@ const BoardRoom = () => {
       state.room.boardRooms.filter((room) => room.path === path)[0].isConnected
   );
 
-  // $ -> CARDS TO COLUMNS
-  useEffect(() => {
-    // $
-    debugger;
-
-    if (allCards.length) {
-      allCards.forEach((card) => columns[card.status].items.push(card));
-    }
-  }, [columns, allCards]);
-
   useEffect(() => {
     // $
     debugger;
@@ -89,6 +90,10 @@ const BoardRoom = () => {
       connect();
     }
   }, [roomId]);
+
+  useEffect(() => {
+    console.log(columns);
+  }, [columns]);
 
   const connect = () => {
     const sock = new SockJS(URL);
@@ -126,58 +131,72 @@ const BoardRoom = () => {
     if (!result.destination) {
       return;
     }
-    const { source, destination, draggableId } = result;
 
     // $
-    debugger;
+    const payloadData = {
+      result: result,
+      columns: columns,
+      path: path,
+    };
 
-    // --------
+    dispatch(moveCard(payloadData));
 
-    if (source.droppableId !== destination.droppableId) {
-      // const sourceColumn = columns[source.droppableId];
-      // const destinyColumn = columns[destination.droppableId];
+    // const { source, destination, draggableId } = result;
 
-      // const sourceItems = [...sourceColumn.items];
-      // const destinyItems = [...destinyColumn.items];
+    // // $
+    // debugger;
 
-      // const [removed] = sourceItems.splice(source.index, 1);
+    // // --------
 
-      // destinyItems.splice(destination.index, 0, removed);
+    // if (source.droppableId !== destination.droppableId) {
+    //   const sourceColumn = columns[source.droppableId];
+    //   const destinyColumn = columns[destination.droppableId];
 
-      // setColumns({
-      //   ...columns,
-      //   [source.droppableId]: {
-      //     ...sourceColumn,
-      //     items: sourceItems,
-      //   },
-      //   [destination.droppableId]: {
-      //     ...destinyColumn,
-      //     items: destinyItems,
-      //   },
-      // });
+    //   const sourceItems = [...sourceColumn.items];
+    //   const destinyItems = [...destinyColumn.items];
 
-      const cards = [...allCards];
-      const card = cards.find((card) => card.id === draggableId);
-      card.status = destination.droppableId;
+    //   const [removed] = sourceItems.splice(source.index, 1);
 
-      setAllCards([...cards]);
-    } else {
-      const column = columns[source.droppableId];
+    //   destinyItems.splice(destination.index, 0, removed);
 
-      const copiedItems = [...column.items];
+    //   // const cards = [...allCards];
+    //   // const card = cards.find((card) => card.id === draggableId);
+    //   // card.status = destination.droppableId;
 
-      const [removed] = copiedItems.splice(source.index, 1);
+    //   // setAllCards([...cards]);
 
-      copiedItems.splice(destination.index, 0, removed);
+    //   // TODO -> pasar esta lógica a redux
 
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...column,
-          items: copiedItems,
-        },
-      });
-    }
+    //   // dispatch(addCardToColumn());
+
+    //   setColumns({
+    //     ...columns,
+    //     [source.droppableId]: {
+    //       ...sourceColumn,
+    //       items: sourceItems,
+    //     },
+    //     [destination.droppableId]: {
+    //       ...destinyColumn,
+    //       items: destinyItems,
+    //     },
+    //   });
+    // } else {
+    //   const column = columns[source.droppableId];
+
+    //   const copiedItems = [...column.items];
+
+    //   const [removed] = copiedItems.splice(source.index, 1);
+
+    //   copiedItems.splice(destination.index, 0, removed);
+
+    //   setColumns({
+    //     ...columns,
+    //     [source.droppableId]: {
+    //       ...column,
+    //       items: copiedItems,
+    //     },
+    //   });
+    // }
   };
 
   const createNewCard = () => {
@@ -213,25 +232,35 @@ const BoardRoom = () => {
   const onNewCard = (payload) => {
     console.log(payload);
 
-    const payloadData = JSON.parse(payload.body);
+    const cardData = JSON.parse(payload.body);
 
     // $
-    console.log(payloadData);
+    console.log(cardData);
 
     // $
     debugger;
 
-    const items = [...columns['TO_DO'].items];
+    const payloadInfo = {
+      to: TO_DO,
+      card: cardData,
+      path: path,
+    };
 
-    const newItems = [...items, payloadData];
+    // from, to, path, card
 
-    setColumns({
-      ...columns,
-      TO_DO: {
-        ...columns['TO_DO'],
-        items: newItems,
-      },
-    });
+    dispatch(addCardToColumn(payloadInfo));
+
+    // const items = [...columns['TO_DO'].items];
+
+    // const newItems = [...items, cardData];
+
+    // setColumns({
+    //   ...columns,
+    //   TO_DO: {
+    //     ...columns['TO_DO'],
+    //     items: newItems,
+    //   },
+    // });
   };
 
   const onCardClicked = (payload) => {
