@@ -71,6 +71,19 @@ const BoardRoom = () => {
 
   // States
   const [roomId, setRoomId] = useState(path);
+  const [activeId, setActiveId] = useState('');
+  const activeCardRef = React.useRef(null);
+
+  useEffect(() => {
+    if (activeCardRef.current) {
+      console.log(activeCardRef.current);
+      // activeCardRef.current.style.background = 'black';
+    }
+  }, [activeCardRef]);
+
+  useEffect(() => {
+    console.log(`Active ID: ${activeId}`);
+  }, [activeId]);
   // const [columns, setColumns] = useState(reduxColumns);
 
   const [allCards, setAllCards] = useState(itemsFromBackend);
@@ -93,6 +106,17 @@ const BoardRoom = () => {
 
   useEffect(() => {
     console.log(columns);
+    const cards = [
+      ...new Set(
+        Object.keys(columns).reduce((acc, actual) => {
+          return [...acc, ...columns[actual].items];
+        }, [])
+      ),
+    ];
+
+    console.log(cards);
+
+    setAllCards(cards);
   }, [columns]);
 
   const connect = () => {
@@ -120,10 +144,11 @@ const BoardRoom = () => {
   const onDragStart = (cardId) => {
     console.log(cardId);
     console.log('start');
-    const card = allCards.filter((card) => card.id === cardId);
+    const card = allCards.filter((card) => card.id === cardId)[0];
 
-    console.log(card);
-
+    // $
+    debugger;
+    setActiveId(cardId);
     stompClient.send('/app/cardClicked', {}, JSON.stringify(card));
   };
 
@@ -131,6 +156,8 @@ const BoardRoom = () => {
     if (!result.destination) {
       return;
     }
+
+    setActiveId('');
 
     // $
     const payloadData = {
@@ -269,6 +296,10 @@ const BoardRoom = () => {
     const payloadData = JSON.parse(payload.body);
     // $
     debugger;
+
+    console.log(activeCardRef.current);
+
+    console.log('CARD CLICKED CHANGE STYLES');
   };
 
   const onCardMoved = (payload) => {
@@ -307,7 +338,6 @@ const BoardRoom = () => {
               onDragEnd={(res) => onDragEnd(res)}
             >
               {Object.entries(columns).map(([id, column]) => {
-                console.log(column);
                 return (
                   <ColumnContainer key={id} title={column.name}>
                     <Droppable droppableId={id} key={id}>
@@ -337,6 +367,10 @@ const BoardRoom = () => {
                                         snapshot={snapshot}
                                         providedDraggablePropsStyle={
                                           provided.draggableProps.style
+                                        }
+                                        // $
+                                        ref={
+                                          id == activeId ? activeCardRef : null
                                         }
                                       >
                                         {item.content}

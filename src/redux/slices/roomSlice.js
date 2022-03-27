@@ -152,8 +152,6 @@ export const roomSlice = createSlice({
         },
 
         addCardToColumn: (state, action) => {
-          // from, to, card, path
-          // si no hay from, es porque es nueva
           // $
           debugger;
           const { from, to, path, card } = action.payload;
@@ -166,19 +164,11 @@ export const roomSlice = createSlice({
           if (!from) {
             const targetItems = [...room.columns.TO_DO.items];
             room.columns.TO_DO.items = [...new Set([...targetItems, card])];
-          } else {
-            const targetItems = [...room.columns[to].items];
 
-            // Add the task to the new column
-            room.columns[to].items = [...targetItems, card];
+            console.log('NEW SET FROM REDUX')
+            console.log(room.columns.TO_DO.items)
+          } 
 
-            // Remove the task from the source column
-            const sourceItems = [...room.columns[from].items];
-
-            const newItems = sourceItems.filter(oldCard => oldCard.id !== card.id);
-
-            room.columns[from].items = newItems;
-          }
         },
 
         moveCard: (state, action) => {
