@@ -74,7 +74,7 @@ const ChatRoom = () => {
   // const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (username && receiverName) {
+    if (username && receiverName && !isConnected) {
       connect();
     }
   }, [username, receiverName]);
