@@ -1,6 +1,6 @@
 .boardRoom-columnContainer {
-    display: grid;
-    grid-template-rows: auto 1fr;
+    display: flex;
+    flex-direction: column;
 
     .boardRoom-column_title {
         letter-spacing: $letter-spacing;

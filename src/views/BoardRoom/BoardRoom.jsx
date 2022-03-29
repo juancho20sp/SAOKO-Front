@@ -99,7 +99,7 @@ const BoardRoom = () => {
     // $
     debugger;
 
-    if (roomId) {
+    if (roomId && !isConnected) {
       connect();
     }
   }, [roomId]);

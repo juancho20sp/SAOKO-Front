@@ -160,6 +160,14 @@ const ChatRoom = () => {
 
   // -------------------------------------------------------------
 
+  // AutoScroll
+  const lastMessageRef = useRef(null);
+  useEffect(() => {
+    lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // -------------------------------------------------------------
+
   const messageInputProps = {
     message: message,
     setMessage: setMessage,
@@ -177,6 +185,8 @@ const ChatRoom = () => {
                 <MessageBox key={message.id} {...message} />
               ))
             }
+
+            <div ref={lastMessageRef}></div>
           </div>
           <MessageInput {...messageInputProps} />
         </div>

@@ -1,47 +1,25 @@
 .chatRoom-main {
-    // $
-    background-color: purple;
-
-    // display: grid;
-    // place-items: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
 
     height: 100%;
-    // max-height: 100%;
 
-    overflow: hidden;
-
-    // padding: 2rem 0;
-     
+    overflow: hidden;     
     
     .chatRoom-container {
         // $ TODO -> make this responsive
         width: 95%;
         height: 95%;
     
-        // max-height: 100%;
-        // overflow-y: scroll;
-
-        // display: grid;
-        // grid-template-rows: 1fr 3rem;
         display: flex;
         flex-direction: column;
         margin: 0 auto;
 
-        // overflow-y: auto;
-// 
         .chatRoom-messageContainer {
-            // position: relative;
-
-            background-color: red;
-            // max-height: calc(100% - 3rem);
-            // max-width: 100%;
             overflow: auto;
             height: 400px;
             flex: 1 1 auto;
-            // overflow-y: scroll;
         }
     }
 }
