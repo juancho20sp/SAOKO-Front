@@ -20,202 +20,58 @@ import { Layout } from '../../components';
 // Drag and drop
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { v4 as uuidv4 } from 'uuid';
-import { connect } from 'net';
 
 // Utils
-import { socket } from '../../utils';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
-import { BsSlack } from 'react-icons/bs';
 
-// $
-const TO_DO = 'TO_DO';
-const IN_PROGRESS = 'IN_PROGRESS';
-const DONE = 'DONE';
-
-const itemsFromBackend = [
-  { id: uuidv4(), content: 'First task', status: TO_DO },
-  { id: uuidv4(), content: 'Second task', status: TO_DO },
-];
-
-const columnsFromBackend = {
-  TO_DO: {
-    name: 'To Do',
-    items: [],
-  },
-  IN_PROGRESS: {
-    name: 'In Progress',
-    items: [],
-  },
-  DONE: {
-    name: 'Done',
-    items: [],
-  },
-};
+// Hooks
+import { useRoomPath } from '../../utils/hooks';
 
 var stompClient = null;
 
-const BoardRoom = () => {
-  const dispatch = useDispatch();
-  const { pathname } = useLocation();
-  const path = pathname.split('/')[2];
-
-  // ------------- REAL TIME LOGIC ----------
-  // TODO
-  // CONSTANTS
+const useBoardRoomConstants = () => {
   const URL = process.env.REACT_APP_REALTIME_URL;
+
+  const status = {
+    TO_DO: 'TO_DO',
+    IN_PROGRESS: 'IN_PROGRESS',
+    DONE: 'DONE',
+  };
+
+  return {
+    URL,
+    status,
+  };
+};
+
+const useBoardRoomProps = ({ path }) => {
+  const username = useSelector((state) => state.login.username);
 
   const columns = useSelector(
     (state) =>
       state.room.boardRooms.filter((room) => room.path === path)[0].columns
   );
 
-  // States
-  const [roomId, setRoomId] = useState(path);
-  const [activeId, setActiveId] = useState('');
-  const activeCardRef = React.useRef(null);
-
-  useEffect(() => {
-    if (activeCardRef.current) {
-      console.log(activeCardRef.current);
-      // activeCardRef.current.style.background = 'black';
-    }
-  }, [activeCardRef]);
-
-  useEffect(() => {
-    console.log(`Active ID: ${activeId}`);
-  }, [activeId]);
-  // const [columns, setColumns] = useState(reduxColumns);
-
-  const [allCards, setAllCards] = useState(itemsFromBackend);
-
-  // Redux
-  const username = useSelector((state) => state.login.username);
   const isConnected = useSelector(
     (state) =>
       state.room.boardRooms.filter((room) => room.path === path)[0].isConnected
   );
 
-  useEffect(() => {
-    // $
-    // debugger;;
-
-    if (roomId && !isConnected) {
-      connect();
-    }
-  }, [roomId]);
-
-  useEffect(() => {
-    console.log(columns);
-    const cards = [
-      ...new Set(
-        Object.keys(columns).reduce((acc, actual) => {
-          return [...acc, ...columns[actual].items];
-        }, [])
-      ),
-    ];
-
-    console.log(cards);
-
-    setAllCards(cards);
-  }, [columns]);
-
-  const connect = () => {
-    const sock = new SockJS(URL);
-
-    stompClient = over(sock);
-    stompClient.connect({}, onConnected, onError);
+  return {
+    columns,
+    username,
+    isConnected,
   };
+};
 
-  const userJoin = () => {
-    // $
-    // debugger;;
+const useBoardRoomEvents = ({ roomId, userJoin }) => {
+  const dispatch = useDispatch();
 
-    if (!isConnected) {
-      dispatch(
-        setConnected({
-          type: BOARD,
-          path: path,
-          isConnected: true,
-        })
-      );
-    }
-  };
+  const { path } = useRoomPath();
 
-  const onDragStart = (cardId) => {
-    console.log(cardId);
-    console.log('start');
-    const card = allCards.filter((card) => card.id === cardId)[0];
+  const { status } = useBoardRoomConstants();
 
-    // $
-    // debugger;;
-    setActiveId(cardId);
-    // dispatch(setActiveCardId(cardId));
-
-    stompClient.send('/app/cardClicked', {}, JSON.stringify(card));
-  };
-
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const cardDiv = document.querySelectorAll(
-      `[data-rbd-draggable-id='${activeId}']`
-    )[0];
-
-    if (cardDiv) {
-      cardDiv.style.background = '';
-
-      // setTimeout(() => {
-      //   cardDiv.style.background = '';
-      // }, 1500);
-    }
-
-    setActiveId('');
-
-    // $
-    const payloadData = {
-      result: result,
-      columns: columns,
-      path: path,
-    };
-
-    dispatch(moveCard(payloadData));
-
-    // $
-    debugger;
-    const card = allCards.filter((card) => card.id === result.draggableId)[0];
-    // card.cardStatus = result.destination.droppableId;
-
-    const newCard = { ...card };
-    newCard.resultData = JSON.stringify(payloadData);
-
-    stompClient.send('/app/cardClickedEnd', {}, JSON.stringify(newCard));
-    stompClient.send('/app/moveCard', {}, JSON.stringify(newCard));
-  };
-
-  const createNewCard = () => {
-    if (stompClient) {
-      // $
-      // debugger;
-
-      const newCard = {
-        id: uuidv4(),
-        roomId: roomId,
-        limitDate: 'HOY',
-        content: `New Card #${columns.TO_DO.items.length + 1} from ${username}`,
-        cardStatus: 'TO_DO',
-      };
-
-      //$
-      // debugger;;
-
-      stompClient.send('/app/newCard', {}, JSON.stringify(newCard));
-    }
-  };
-
-  // EVENTS
   const onConnected = () => {
     stompClient.subscribe('/user/' + roomId + '/newCard', onNewCard);
     stompClient.subscribe('/user/' + roomId + '/cardClicked', onCardClicked);
@@ -237,45 +93,17 @@ const BoardRoom = () => {
 
     const cardData = JSON.parse(payload.body);
 
-    // $
-    console.log(cardData);
-
-    // $
-    // debugger;;
-
     const payloadInfo = {
-      to: TO_DO,
+      to: status.TO_DO,
       card: cardData,
       path: path,
     };
 
-    // from, to, path, card
-
     dispatch(addCardToColumn(payloadInfo));
-
-    // const items = [...columns['TO_DO'].items];
-
-    // const newItems = [...items, cardData];
-
-    // setColumns({
-    //   ...columns,
-    //   TO_DO: {
-    //     ...columns['TO_DO'],
-    //     items: newItems,
-    //   },
-    // });
   };
 
   const onCardClicked = (payload) => {
-    console.log(payload);
-
     const payloadData = JSON.parse(payload.body);
-    // $
-    // debugger;
-
-    // dispatch(setActiveCardId(payloadData.id));
-
-    console.log(activeCardRef.current);
 
     const cardDiv = document.querySelectorAll(
       `[data-rbd-draggable-id='${payloadData.id}']`
@@ -284,21 +112,11 @@ const BoardRoom = () => {
     if (cardDiv) {
       cardDiv.style.background = '#8884FF';
       cardDiv.style.pointerEvents = 'none';
-
-      // setTimeout(() => {
-      //   cardDiv.style.background = '';
-      // }, 1500);
     }
-
-    console.log('CARD CLICKED CHANGE STYLES');
   };
 
   const onCardClickedEnd = (payload) => {
-    console.log(payload);
-
     const payloadData = JSON.parse(payload.body);
-
-    // dispatch(setActiveCardId(payloadData.id));
 
     const cardDiv = document.querySelectorAll(
       `[data-rbd-draggable-id='${payloadData.id}']`
@@ -307,25 +125,161 @@ const BoardRoom = () => {
     if (cardDiv) {
       cardDiv.style.background = '';
       cardDiv.style.pointerEvents = '';
-
-      // setTimeout(() => {
-      //   cardDiv.style.background = '';
-      // }, 1500);
     }
   };
 
   const onCardMoved = (payload) => {
-    console.log(payload);
-
     const payloadData = JSON.parse(payload.body);
     payloadData.resultData = JSON.parse(payloadData.resultData);
 
     dispatch(moveCard(payloadData));
-    // $
-    // debugger;;
   };
 
-  // -----------------------------------------
+  return {
+    onConnected,
+    onError,
+    onNewCard,
+    onCardClicked,
+    onCardClickedEnd,
+    onCardMoved,
+  };
+};
+
+const useBoardRoomLogic = ({ path }) => {
+  // States
+  const [roomId] = useState(path);
+  const [activeId, setActiveId] = useState('');
+  const [allCards, setAllCards] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const { onConnected, onError } = useBoardRoomEvents({
+    roomId,
+    userJoin,
+  });
+
+  const { isConnected, columns, username } = useBoardRoomProps({ path });
+
+  const { URL } = useBoardRoomConstants();
+
+  const connect = () => {
+    const sock = new SockJS(URL);
+
+    stompClient = over(sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  function userJoin() {
+    if (!isConnected) {
+      dispatch(
+        setConnected({
+          type: BOARD,
+          path: path,
+          isConnected: true,
+        })
+      );
+    }
+  }
+
+  const onDragStart = (cardId) => {
+    const card = allCards.filter((card) => card.id === cardId)[0];
+
+    setActiveId(cardId);
+
+    stompClient.send('/app/cardClicked', {}, JSON.stringify(card));
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const cardDiv = document.querySelectorAll(
+      `[data-rbd-draggable-id='${activeId}']`
+    )[0];
+
+    if (cardDiv) {
+      cardDiv.style.background = '';
+    }
+
+    setActiveId('');
+
+    const payloadData = {
+      result: result,
+      columns: columns,
+      path: path,
+    };
+
+    dispatch(moveCard(payloadData));
+
+    const card = allCards.filter((card) => card.id === result.draggableId)[0];
+
+    const newCard = { ...card };
+    newCard.resultData = JSON.stringify(payloadData);
+
+    stompClient.send('/app/cardClickedEnd', {}, JSON.stringify(newCard));
+    stompClient.send('/app/moveCard', {}, JSON.stringify(newCard));
+  };
+
+  const createNewCard = () => {
+    if (stompClient) {
+      const newCard = {
+        id: uuidv4(),
+        roomId: roomId,
+        limitDate: 'HOY',
+        content: `New Card #${columns.TO_DO.items.length + 1} from ${username}`,
+        cardStatus: 'TO_DO',
+      };
+
+      stompClient.send('/app/newCard', {}, JSON.stringify(newCard));
+    }
+  };
+
+  return {
+    roomId,
+    activeId,
+    allCards,
+    connect,
+    createNewCard,
+    setAllCards,
+    onDragStart,
+    onDragEnd,
+  };
+};
+
+const BoardRoom = () => {
+  const { path } = useRoomPath();
+
+  const { columns, username, isConnected } = useBoardRoomProps({ path });
+
+  const {
+    roomId,
+    setAllCards,
+    connect,
+    createNewCard,
+    onDragStart,
+    onDragEnd,
+  } = useBoardRoomLogic({
+    path,
+  });
+
+  useEffect(() => {
+    if (roomId && !isConnected) {
+      connect();
+    }
+  }, [roomId, isConnected]);
+
+  useEffect(() => {
+    const cards = [
+      ...new Set(
+        Object.keys(columns).reduce((acc, actual) => {
+          return [...acc, ...columns[actual].items];
+        }, [])
+      ),
+    ];
+
+    setAllCards(cards);
+  }, [columns, setAllCards]);
 
   const handleAddTask = () => {
     createNewCard();
@@ -336,13 +290,12 @@ const BoardRoom = () => {
       <div className={styles['boardRoom-main']}>
         <div className={styles['boardRoom-container']}>
           <header className={styles['boardRoom-header']}>
+            {/* TODO */}
             <div>
-              <p>50 miembros</p>
+              <p>Miembros</p>
             </div>
 
-            <h2 className={styles['boardRoom-header_title']}>
-              Nombre del tablero
-            </h2>
+            <h2 className={styles['boardRoom-header_title']}>Tablero Kanban</h2>
 
             <CreateTask text={'Crear tarea'} handleClick={handleAddTask} />
           </header>
@@ -400,7 +353,7 @@ const BoardRoom = () => {
                                             'data-rbd-draggable-id'
                                           ]
                                         }
-                                        activeId={activeId}
+                                        // activeId={activeId}
                                         // ref={
                                         //   id == activeId ? activeCardRef : null
                                         // }

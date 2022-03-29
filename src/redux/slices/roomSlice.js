@@ -178,12 +178,8 @@ export const roomSlice = createSlice({
           if (!result.destination) {
             return;
           }
-          const { source, destination, draggableId } = result;
-      
-          // $
-          // debugger;;
-      
-          // --------
+          const { source, destination } = result;
+    
       
           if (source.droppableId !== destination.droppableId) {
             const sourceColumn = columns[source.droppableId];
@@ -225,17 +221,8 @@ export const roomSlice = createSlice({
                 items: copiedItems,
               },
             }
-
-            // setColumns({
-            //   ...columns,
-            //   [source.droppableId]: {
-            //     ...column,
-            //     items: copiedItems,
-            //   },
-            // });
           }
         },
-
     }
 });
 

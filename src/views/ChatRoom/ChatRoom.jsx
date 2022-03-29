@@ -21,14 +21,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 
+// Hooks
+import { useRoomPath } from '../../utils/hooks';
+
 var stompClient = null;
-
-const useChatRoomPath = () => {
-  const { pathname } = useLocation();
-  const path = pathname.split('/')[2];
-
-  return { path };
-};
 
 const useChatRoomProps = ({ path }) => {
   const username = useSelector((state) => state.login.username);
@@ -192,7 +188,7 @@ const useAutoScroll = () => {
 };
 
 const ChatRoom = () => {
-  const { path } = useChatRoomPath();
+  const { path } = useRoomPath();
 
   const { username, isConnected, allMessages } = useChatRoomProps({ path });
 
