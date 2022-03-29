@@ -109,7 +109,7 @@ export const roomSlice = createSlice({
 
         addMessageToChatRoom: (state, action) => {
           // $
-          debugger;
+          // debugger;;
           const room = state.chatRooms.filter(room => room.path === action.payload.receiverName)[0];
 
           const idx = state.chatRooms.findIndex(room => room.path === action.payload.receiverName)
@@ -122,7 +122,7 @@ export const roomSlice = createSlice({
 
         setConnected: (state, action) => {
           // $
-          debugger;
+          // debugger;;
 
           let rooms;
           let roomLabel;
@@ -153,7 +153,7 @@ export const roomSlice = createSlice({
 
         addCardToColumn: (state, action) => {
           // $
-          debugger;
+          // debugger;;
           const { from, to, path, card } = action.payload;
 
           let room = state.boardRooms.find(room => room.path === path);
@@ -185,7 +185,7 @@ export const roomSlice = createSlice({
           const { source, destination, draggableId } = result;
       
           // $
-          debugger;
+          // debugger;;
       
           // --------
       

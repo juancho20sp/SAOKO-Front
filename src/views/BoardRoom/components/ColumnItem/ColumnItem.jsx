@@ -10,12 +10,12 @@ const ColumnItem = ({
   providedDraggablePropsStyle,
 }) => {
   // $
-  // debugger;
+  // // debugger;;
 
   // $
   React.useEffect(() => {
     if (snapshot.isDragging) {
-      // debugger;
+      // // debugger;;
       console.log('dragging');
       return;
     }

@@ -97,7 +97,7 @@ const BoardRoom = () => {
 
   useEffect(() => {
     // $
-    debugger;
+    // debugger;;
 
     if (roomId && !isConnected) {
       connect();
@@ -128,7 +128,7 @@ const BoardRoom = () => {
 
   const userJoin = () => {
     // $
-    debugger;
+    // debugger;;
 
     if (!isConnected) {
       dispatch(
@@ -147,7 +147,7 @@ const BoardRoom = () => {
     const card = allCards.filter((card) => card.id === cardId)[0];
 
     // $
-    debugger;
+    // debugger;;
     setActiveId(cardId);
     stompClient.send('/app/cardClicked', {}, JSON.stringify(card));
   };
@@ -171,7 +171,7 @@ const BoardRoom = () => {
     // const { source, destination, draggableId } = result;
 
     // // $
-    // debugger;
+    // // debugger;;
 
     // // --------
 
@@ -237,7 +237,7 @@ const BoardRoom = () => {
       };
 
       //$
-      debugger;
+      // debugger;;
 
       stompClient.send('/app/newCard', {}, JSON.stringify(newCard));
     }
@@ -265,7 +265,7 @@ const BoardRoom = () => {
     console.log(cardData);
 
     // $
-    debugger;
+    // debugger;;
 
     const payloadInfo = {
       to: TO_DO,
@@ -295,7 +295,7 @@ const BoardRoom = () => {
 
     const payloadData = JSON.parse(payload.body);
     // $
-    debugger;
+    // debugger;;
 
     console.log(activeCardRef.current);
 
@@ -307,7 +307,7 @@ const BoardRoom = () => {
 
     const payloadData = JSON.parse(payload.body);
     // $
-    debugger;
+    // debugger;;
   };
 
   // -----------------------------------------

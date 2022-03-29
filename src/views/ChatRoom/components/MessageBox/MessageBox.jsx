@@ -20,7 +20,7 @@ const MessageBox = ({ messageSent, senderName, date, message }) => {
         margin: senderName === ADMIN ? '15px auto' : '',
         minHeight: senderName === ADMIN ? 'auto' : '',
         textAlign: senderName === ADMIN ? 'center' : '',
-        marginLeft: messageSent ? 'auto' : '',
+        marginLeft: senderName !== ADMIN && messageSent ? 'auto' : '',
       }}
     >
       <div className={styles['messageBox-info']}>

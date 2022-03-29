@@ -17,6 +17,7 @@ import { MessageInput, MessageBox } from './components';
 import { Layout } from '../../components';
 
 // Utils
+import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../utils';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
@@ -80,7 +81,7 @@ const ChatRoom = () => {
   }, [username, receiverName]);
 
   useEffect(() => {
-    debugger;
+    // debugger;;
   }, [allMessages]);
 
   const connect = () => {
@@ -96,7 +97,7 @@ const ChatRoom = () => {
     }
 
     // $
-    debugger;
+    // debugger;;
 
     if (!isConnected) {
       dispatch(
@@ -109,6 +110,7 @@ const ChatRoom = () => {
 
       const chatMessage = {
         // TODO -> Exteriorize this
+        id: uuidv4(),
         senderName: 'ADMIN',
         message: `${username} ha entrado al chat`,
         receiverName: receiverName,
@@ -124,6 +126,7 @@ const ChatRoom = () => {
       const date = new Date();
 
       const chatMessage = {
+        id: uuidv4(),
         senderName: username,
         receiverName: receiverName,
         message: message,
@@ -132,7 +135,7 @@ const ChatRoom = () => {
       };
 
       //$
-      debugger;
+      // debugger;;
 
       stompClient.send('/app/private-message', {}, JSON.stringify(chatMessage));
       setMessage('');
@@ -158,7 +161,7 @@ const ChatRoom = () => {
     const payloadData = JSON.parse(payload.body);
 
     // $
-    debugger;
+    // debugger;;
 
     // Value added in order to see if its a message sent or received
     const messageSent = payloadData.senderName === username;
