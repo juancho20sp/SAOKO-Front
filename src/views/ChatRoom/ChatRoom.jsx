@@ -22,22 +22,22 @@ import { socket } from '../../utils';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 
-// TODO -> message sent must be handed by hook
-const chats = [
-  {
-    id: 0,
-    messageSent: true,
-    time: '9:50 pm',
-    text: 'saoko papi',
-  },
-  {
-    id: 1,
-    messageSent: false,
-    sender: 'Diego triviño',
-    time: '9:50 pm',
-    text: 'saoko papi',
-  },
-];
+// // TODO -> message sent must be handed by hook
+// const chats = [
+//   {
+//     id: 0,
+//     messageSent: true,
+//     time: '9:50 pm',
+//     text: 'saoko papi',
+//   },
+//   {
+//     id: 1,
+//     messageSent: false,
+//     sender: 'Diego triviño',
+//     time: '9:50 pm',
+//     text: 'saoko papi',
+//   },
+// ];
 
 var stompClient = null;
 
@@ -62,12 +62,7 @@ const ChatRoom = () => {
       state.room.chatRooms.filter((room) => room.path === path)[0].messages
   );
 
-  // TODO
-  // CONSTANTS
-  // DEV
-  // const URL = 'http://localhost:8080/ws';
-  // PROD
-  const URL = 'https://saoko-realtime.herokuapp.com/ws';
+  const URL = process.env.REACT_APP_REALTIME_URL;
 
   // const [allMessages, setAllMessages] = useState([]);
   const [message, setMessage] = useState('');

@@ -1,6 +1,9 @@
 import React from 'react';
 
-// Router
+// State management
+import { useSelector } from 'react-redux';
+
+// Navigation
 import { routes } from '../../utils/';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,12 +20,15 @@ const handleClick = (navigate) => {
 const UserPreview = () => {
   const navigate = useNavigate();
 
+  // Redux
+  const username = useSelector((state) => state.login.username);
+
   return (
     <div
       className={styles['userModule-container']}
       onClick={() => handleClick(navigate)}
     >
-      <p className={styles['userModule-username']}>Diego triviño</p>
+      <p className={styles['userModule-username']}>{username}</p>
 
       <IconContext.Provider value={{ size: '2.4rem' }}>
         <BiUserCircle />
