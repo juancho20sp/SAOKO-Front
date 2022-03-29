@@ -28,7 +28,9 @@ const MessageBox = ({ messageSent, senderName, date, message }) => {
         {!messageSent && senderName !== ADMIN && (
           <p className={styles['messageBox-username']}>{senderName}</p>
         )}
-        <p className={styles['messageBox-time']}>{date}</p>
+        {senderName !== ADMIN && (
+          <p className={styles['messageBox-time']}>{date}</p>
+        )}
       </div>
 
       <p className={styles['messageBox-message']}>{message}</p>

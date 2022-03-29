@@ -64,7 +64,10 @@ const ChatRoom = () => {
 
   // TODO
   // CONSTANTS
-  const URL = 'http://localhost:8080/ws';
+  // DEV
+  // const URL = 'http://localhost:8080/ws';
+  // PROD
+  const URL = 'https://saoko-realtime.herokuapp.com/ws';
 
   // const [allMessages, setAllMessages] = useState([]);
   const [message, setMessage] = useState('');
@@ -108,6 +111,8 @@ const ChatRoom = () => {
         })
       );
 
+      const date = new Date();
+
       const chatMessage = {
         // TODO -> Exteriorize this
         id: uuidv4(),
@@ -115,6 +120,7 @@ const ChatRoom = () => {
         message: `${username} ha entrado al chat`,
         receiverName: receiverName,
         messageStatus: 'JOIN',
+        date: `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`,
       };
 
       stompClient.send('/app/private-message', {}, JSON.stringify(chatMessage));
@@ -144,6 +150,9 @@ const ChatRoom = () => {
 
   // EVENTS
   const onConnected = () => {
+    // $
+    debugger;
+
     stompClient.subscribe(
       '/user/' + receiverName + '/private',
       onPrivateMessage
