@@ -48,20 +48,8 @@ const useChatRoomProps = ({ path }) => {
   };
 };
 
-const useChatRoom = () => {};
-
-/**
- * TODO
- * Assign the room code using the path
- * Send all the messages to the room
- */
-
-const ChatRoom = () => {
-  const dispatch = useDispatch();
-
-  const { path } = useChatRoomPath();
-
-  const { username, isConnected, allMessages } = useChatRoomProps({ path });
+const useChatRoomConstants = () => {
+  const ADMIN = 'ADMIN';
 
   const URL = process.env.REACT_APP_REALTIME_URL;
 
@@ -71,75 +59,17 @@ const ChatRoom = () => {
     LEAVE: 'LEAVE',
   };
 
-  const ADMIN = 'ADMIN';
-
-  const [message, setMessage] = useState('');
-  const [receiverName, setReceiverName] = useState(path);
-
-  useEffect(() => {
-    if (username && receiverName && !isConnected) {
-      connect();
-    }
-  }, [username, receiverName]);
-
-  const connect = () => {
-    const sock = new SockJS(URL);
-
-    stompClient = over(sock);
-    stompClient.connect({}, onConnected, onError);
+  return {
+    ADMIN,
+    URL,
+    status,
   };
+};
 
-  const createMessage = ({ senderName, message, messageStatus }) => {
-    const date = new Date();
+const useChatRoomEvents = ({ receiverName, username, userJoin }) => {
+  const dispatch = useDispatch();
 
-    return {
-      id: uuidv4(),
-      senderName,
-      message,
-      receiverName,
-      messageStatus,
-      date: `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`,
-    };
-  };
-
-  const userJoin = () => {
-    if (!username) {
-      return;
-    }
-
-    if (!isConnected) {
-      dispatch(
-        setConnected({
-          type: CHAT,
-          path: path,
-          isConnected: true,
-        })
-      );
-
-      const message = createMessage({
-        message: `${username} ha entrado al chat`,
-        messageStatus: status.JOIN,
-        senderName: ADMIN,
-      });
-
-      stompClient.send('/app/private-message', {}, JSON.stringify(message));
-    }
-  };
-
-  const sendPrivateValue = () => {
-    if (stompClient) {
-      const newMessage = createMessage({
-        message,
-        messageStatus: status.MESSAGE,
-        senderName: username,
-      });
-
-      stompClient.send('/app/private-message', {}, JSON.stringify(newMessage));
-      setMessage('');
-    }
-  };
-
-  // EVENTS
+  // Events
   const onConnected = () => {
     stompClient.subscribe(
       '/user/' + receiverName + '/private',
@@ -165,20 +95,135 @@ const ChatRoom = () => {
     dispatch(addMessageToChatRoom(payloadData));
   };
 
-  // -------------------------------------------------------------
+  return {
+    onConnected,
+    onError,
+    onPrivateMessage,
+  };
+};
 
-  // AutoScroll
+const useChatRoomLogic = ({ receiverName, username, isConnected, path }) => {
+  const dispatch = useDispatch();
+  const [message, setMessage] = useState('');
+
+  const { ADMIN, URL, status } = useChatRoomConstants();
+
+  const { onConnected, onError } = useChatRoomEvents({
+    receiverName,
+    userJoin,
+    username,
+  });
+
+  const connect = () => {
+    const sock = new SockJS(URL);
+
+    stompClient = over(sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  const createMessage = ({ senderName, message, messageStatus }) => {
+    const date = new Date();
+
+    return {
+      id: uuidv4(),
+      senderName,
+      message,
+      receiverName,
+      messageStatus,
+      date: `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`,
+    };
+  };
+
+  function userJoin() {
+    if (!username) {
+      return;
+    }
+
+    if (!isConnected) {
+      dispatch(
+        setConnected({
+          type: CHAT,
+          path: path,
+          isConnected: true,
+        })
+      );
+
+      const message = createMessage({
+        message: `${username} ha entrado al chat`,
+        messageStatus: status.JOIN,
+        senderName: ADMIN,
+      });
+
+      stompClient.send('/app/private-message', {}, JSON.stringify(message));
+    }
+  }
+
+  const sendMessage = () => {
+    if (stompClient) {
+      const newMessage = createMessage({
+        message,
+        messageStatus: status.MESSAGE,
+        senderName: username,
+      });
+
+      stompClient.send('/app/private-message', {}, JSON.stringify(newMessage));
+      setMessage('');
+    }
+  };
+
+  return {
+    connect,
+    createMessage,
+    userJoin,
+    sendMessage,
+    message,
+    setMessage,
+  };
+};
+
+const useAutoScroll = () => {
   const lastMessageRef = useRef(null);
   useEffect(() => {
     lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
   });
 
-  // -------------------------------------------------------------
+  return {
+    lastMessageRef,
+  };
+};
+
+/**
+ * TODO
+ * Assign the room code using the path
+ * Send all the messages to the room
+ */
+
+const ChatRoom = () => {
+  const { path } = useChatRoomPath();
+
+  const { username, isConnected, allMessages } = useChatRoomProps({ path });
+
+  const [receiverName] = useState(path);
+
+  const { connect, message, setMessage, sendMessage } = useChatRoomLogic({
+    isConnected,
+    path,
+    receiverName,
+    username,
+  });
+
+  const { lastMessageRef } = useAutoScroll();
+
+  useEffect(() => {
+    if (username && receiverName && !isConnected) {
+      connect();
+    }
+  }, [username, receiverName, isConnected]);
 
   const messageInputProps = {
-    message: message,
-    setMessage: setMessage,
-    sendMessage: sendPrivateValue,
+    message,
+    setMessage,
+    sendMessage,
   };
 
   return (
@@ -186,12 +231,9 @@ const ChatRoom = () => {
       <div className={styles['chatRoom-main']}>
         <div className={styles['chatRoom-container']}>
           <div className={styles['chatRoom-messageContainer']}>
-            {
-              // allMessages.length > 0 &&
-              allMessages.map((message) => (
-                <MessageBox key={message.id} {...message} />
-              ))
-            }
+            {allMessages.map((message) => (
+              <MessageBox key={message.id} {...message} />
+            ))}
 
             <div ref={lastMessageRef}></div>
           </div>
