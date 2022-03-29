@@ -93,7 +93,7 @@ export const roomSlice = createSlice({
                 isConnected: false,
               },
         ],
-        newRoom: {}
+        newRoom: {},
     },
     reducers: {
         setChatRooms: (state, action) => {
@@ -102,10 +102,6 @@ export const roomSlice = createSlice({
         setNewChatRoom: (state, action) => {
             state.chatRooms = [...state.chatRooms, action.payload];
         },
-
-        // $
-        // TODO
-        // -------------------------
 
         addMessageToChatRoom: (state, action) => {
           // $
@@ -249,7 +245,7 @@ export const roomSlice = createSlice({
             //   },
             // });
           }
-        }
+        },
 
     }
 });

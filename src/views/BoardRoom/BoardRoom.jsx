@@ -26,6 +26,7 @@ import { connect } from 'net';
 import { socket } from '../../utils';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
+import { BsSlack } from 'react-icons/bs';
 
 // $
 const TO_DO = 'TO_DO';
@@ -62,7 +63,7 @@ const BoardRoom = () => {
   // ------------- REAL TIME LOGIC ----------
   // TODO
   // CONSTANTS
-  const URL = 'http://localhost:8080/ws';
+  const URL = process.env.REACT_APP_REALTIME_URL;
 
   const columns = useSelector(
     (state) =>
@@ -149,12 +150,26 @@ const BoardRoom = () => {
     // $
     // debugger;;
     setActiveId(cardId);
+    // dispatch(setActiveCardId(cardId));
+
     stompClient.send('/app/cardClicked', {}, JSON.stringify(card));
   };
 
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
+    }
+
+    const cardDiv = document.querySelectorAll(
+      `[data-rbd-draggable-id='${activeId}']`
+    )[0];
+
+    if (cardDiv) {
+      cardDiv.style.background = '';
+
+      // setTimeout(() => {
+      //   cardDiv.style.background = '';
+      // }, 1500);
     }
 
     setActiveId('');
@@ -168,71 +183,22 @@ const BoardRoom = () => {
 
     dispatch(moveCard(payloadData));
 
-    // const { source, destination, draggableId } = result;
-
-    // // $
-    // // debugger;;
-
-    // // --------
-
-    // if (source.droppableId !== destination.droppableId) {
-    //   const sourceColumn = columns[source.droppableId];
-    //   const destinyColumn = columns[destination.droppableId];
-
-    //   const sourceItems = [...sourceColumn.items];
-    //   const destinyItems = [...destinyColumn.items];
-
-    //   const [removed] = sourceItems.splice(source.index, 1);
-
-    //   destinyItems.splice(destination.index, 0, removed);
-
-    //   // const cards = [...allCards];
-    //   // const card = cards.find((card) => card.id === draggableId);
-    //   // card.status = destination.droppableId;
-
-    //   // setAllCards([...cards]);
-
-    //   // TODO -> pasar esta lógica a redux
-
-    //   // dispatch(addCardToColumn());
-
-    //   setColumns({
-    //     ...columns,
-    //     [source.droppableId]: {
-    //       ...sourceColumn,
-    //       items: sourceItems,
-    //     },
-    //     [destination.droppableId]: {
-    //       ...destinyColumn,
-    //       items: destinyItems,
-    //     },
-    //   });
-    // } else {
-    //   const column = columns[source.droppableId];
-
-    //   const copiedItems = [...column.items];
-
-    //   const [removed] = copiedItems.splice(source.index, 1);
-
-    //   copiedItems.splice(destination.index, 0, removed);
-
-    //   setColumns({
-    //     ...columns,
-    //     [source.droppableId]: {
-    //       ...column,
-    //       items: copiedItems,
-    //     },
-    //   });
-    // }
+    // $
+    debugger;
+    const card = allCards.filter((card) => card.id === result.draggableId)[0];
+    stompClient.send('/app/cardClickedEnd', {}, JSON.stringify(card));
   };
 
   const createNewCard = () => {
     if (stompClient) {
+      // $
+      // debugger;
+
       const newCard = {
         id: uuidv4(),
         roomId: roomId,
         limitDate: 'HOY',
-        content: 'New Card',
+        content: `New Card #${columns.TO_DO.items.length + 1} from ${username}`,
         cardStatus: 'TO_DO',
       };
 
@@ -247,6 +213,10 @@ const BoardRoom = () => {
   const onConnected = () => {
     stompClient.subscribe('/user/' + roomId + '/newCard', onNewCard);
     stompClient.subscribe('/user/' + roomId + '/cardClicked', onCardClicked);
+    stompClient.subscribe(
+      '/user/' + roomId + '/cardClickedEnd',
+      onCardClickedEnd
+    );
     stompClient.subscribe('/user/' + roomId + '/moveCard', onCardMoved);
 
     userJoin();
@@ -295,11 +265,47 @@ const BoardRoom = () => {
 
     const payloadData = JSON.parse(payload.body);
     // $
-    // debugger;;
+    // debugger;
+
+    // dispatch(setActiveCardId(payloadData.id));
 
     console.log(activeCardRef.current);
 
+    const cardDiv = document.querySelectorAll(
+      `[data-rbd-draggable-id='${payloadData.id}']`
+    )[0];
+
+    if (cardDiv) {
+      cardDiv.style.background = '#8884FF';
+      cardDiv.style.pointerEvents = 'none';
+
+      // setTimeout(() => {
+      //   cardDiv.style.background = '';
+      // }, 1500);
+    }
+
     console.log('CARD CLICKED CHANGE STYLES');
+  };
+
+  const onCardClickedEnd = (payload) => {
+    console.log(payload);
+
+    const payloadData = JSON.parse(payload.body);
+
+    // dispatch(setActiveCardId(payloadData.id));
+
+    const cardDiv = document.querySelectorAll(
+      `[data-rbd-draggable-id='${payloadData.id}']`
+    )[0];
+
+    if (cardDiv) {
+      cardDiv.style.background = '';
+      cardDiv.style.pointerEvents = '';
+
+      // setTimeout(() => {
+      //   cardDiv.style.background = '';
+      // }, 1500);
+    }
   };
 
   const onCardMoved = (payload) => {
@@ -357,7 +363,18 @@ const BoardRoom = () => {
                                   index={idx}
                                 >
                                   {(provided, snapshot) => {
+                                    // debugger;
                                     return (
+                                      // <div
+                                      //   ref={
+                                      //     activeId ===
+                                      //     provided.draggableProps[
+                                      //       'data-rbd-draggable-id'
+                                      //     ]
+                                      //       ? activeCardRef
+                                      //       : null
+                                      //   }
+                                      // >
                                       <ColumnItem
                                         reference={provided.innerRef}
                                         draggableProps={provided.draggableProps}
@@ -369,12 +386,19 @@ const BoardRoom = () => {
                                           provided.draggableProps.style
                                         }
                                         // $
-                                        ref={
-                                          id == activeId ? activeCardRef : null
+                                        cardId={
+                                          provided.draggableProps[
+                                            'data-rbd-draggable-id'
+                                          ]
                                         }
+                                        activeId={activeId}
+                                        // ref={
+                                        //   id == activeId ? activeCardRef : null
+                                        // }
                                       >
                                         {item.content}
                                       </ColumnItem>
+                                      // </div>
                                     );
                                   }}
                                 </Draggable>
