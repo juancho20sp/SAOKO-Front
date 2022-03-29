@@ -18,40 +18,19 @@ import { Layout } from '../../components';
 
 // Utils
 import { v4 as uuidv4 } from 'uuid';
-import { socket } from '../../utils';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 
-// // TODO -> message sent must be handed by hook
-// const chats = [
-//   {
-//     id: 0,
-//     messageSent: true,
-//     time: '9:50 pm',
-//     text: 'saoko papi',
-//   },
-//   {
-//     id: 1,
-//     messageSent: false,
-//     sender: 'Diego triviño',
-//     time: '9:50 pm',
-//     text: 'saoko papi',
-//   },
-// ];
-
 var stompClient = null;
 
-/**
- * TODO
- * Assign the room code using the path
- * Send all the messages to the room
- */
-
-const ChatRoom = () => {
-  const dispatch = useDispatch();
+const useChatRoomPath = () => {
   const { pathname } = useLocation();
   const path = pathname.split('/')[2];
 
+  return { path };
+};
+
+const useChatRoomProps = ({ path }) => {
   const username = useSelector((state) => state.login.username);
   const isConnected = useSelector(
     (state) =>
@@ -62,25 +41,46 @@ const ChatRoom = () => {
       state.room.chatRooms.filter((room) => room.path === path)[0].messages
   );
 
+  return {
+    username,
+    isConnected,
+    allMessages,
+  };
+};
+
+const useChatRoom = () => {};
+
+/**
+ * TODO
+ * Assign the room code using the path
+ * Send all the messages to the room
+ */
+
+const ChatRoom = () => {
+  const dispatch = useDispatch();
+
+  const { path } = useChatRoomPath();
+
+  const { username, isConnected, allMessages } = useChatRoomProps({ path });
+
   const URL = process.env.REACT_APP_REALTIME_URL;
 
-  // const [allMessages, setAllMessages] = useState([]);
+  const status = {
+    JOIN: 'JOIN',
+    MESSAGE: 'MESSAGE',
+    LEAVE: 'LEAVE',
+  };
+
+  const ADMIN = 'ADMIN';
+
   const [message, setMessage] = useState('');
   const [receiverName, setReceiverName] = useState(path);
-  // const [username, setUsername] = useState(
-  //   `user #${Math.floor(Math.random() * 1000 + 1)}`
-  // );
-  // const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (username && receiverName && !isConnected) {
       connect();
     }
   }, [username, receiverName]);
-
-  useEffect(() => {
-    // debugger;;
-  }, [allMessages]);
 
   const connect = () => {
     const sock = new SockJS(URL);
@@ -89,13 +89,23 @@ const ChatRoom = () => {
     stompClient.connect({}, onConnected, onError);
   };
 
+  const createMessage = ({ senderName, message, messageStatus }) => {
+    const date = new Date();
+
+    return {
+      id: uuidv4(),
+      senderName,
+      message,
+      receiverName,
+      messageStatus,
+      date: `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`,
+    };
+  };
+
   const userJoin = () => {
     if (!username) {
       return;
     }
-
-    // $
-    // debugger;;
 
     if (!isConnected) {
       dispatch(
@@ -106,48 +116,31 @@ const ChatRoom = () => {
         })
       );
 
-      const date = new Date();
-
-      const chatMessage = {
-        // TODO -> Exteriorize this
-        id: uuidv4(),
-        senderName: 'ADMIN',
+      const message = createMessage({
         message: `${username} ha entrado al chat`,
-        receiverName: receiverName,
-        messageStatus: 'JOIN',
-        date: `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`,
-      };
+        messageStatus: status.JOIN,
+        senderName: ADMIN,
+      });
 
-      stompClient.send('/app/private-message', {}, JSON.stringify(chatMessage));
+      stompClient.send('/app/private-message', {}, JSON.stringify(message));
     }
   };
 
   const sendPrivateValue = () => {
     if (stompClient) {
-      const date = new Date();
-
-      const chatMessage = {
-        id: uuidv4(),
+      const newMessage = createMessage({
+        message,
+        messageStatus: status.MESSAGE,
         senderName: username,
-        receiverName: receiverName,
-        message: message,
-        messageStatus: 'MESSAGE',
-        date: `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`,
-      };
+      });
 
-      //$
-      // debugger;;
-
-      stompClient.send('/app/private-message', {}, JSON.stringify(chatMessage));
+      stompClient.send('/app/private-message', {}, JSON.stringify(newMessage));
       setMessage('');
     }
   };
 
   // EVENTS
   const onConnected = () => {
-    // $
-    debugger;
-
     stompClient.subscribe(
       '/user/' + receiverName + '/private',
       onPrivateMessage
@@ -163,9 +156,6 @@ const ChatRoom = () => {
     console.log(payload);
 
     const payloadData = JSON.parse(payload.body);
-
-    // $
-    // debugger;;
 
     // Value added in order to see if its a message sent or received
     const messageSent = payloadData.senderName === username;
