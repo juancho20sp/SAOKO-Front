@@ -168,7 +168,7 @@ export const roomSlice = createSlice({
         },
 
         moveCard: (state, action) => {
-          const { result, columns, path } = action.payload;
+          const { result, columns, path } = action.payload.resultData ? action.payload.resultData : action.payload;
 
           let room = state.boardRooms.find(room => room.path === path);
           const roomIdx = state.boardRooms.findIndex(room => room.path === path);
@@ -208,17 +208,6 @@ export const roomSlice = createSlice({
                 items: [...new Set(destinyItems)],
               },
             }
-            // setColumns({
-            //   ...columns,
-            //   [source.droppableId]: {
-            //     ...sourceColumn,
-            //     items: sourceItems,
-            //   },
-            //   [destination.droppableId]: {
-            //     ...destinyColumn,
-            //     items: destinyItems,
-            //   },
-            // });
           } else {
             const column = columns[source.droppableId];
       

@@ -186,7 +186,13 @@ const BoardRoom = () => {
     // $
     debugger;
     const card = allCards.filter((card) => card.id === result.draggableId)[0];
-    stompClient.send('/app/cardClickedEnd', {}, JSON.stringify(card));
+    // card.cardStatus = result.destination.droppableId;
+
+    const newCard = { ...card };
+    newCard.resultData = JSON.stringify(payloadData);
+
+    stompClient.send('/app/cardClickedEnd', {}, JSON.stringify(newCard));
+    stompClient.send('/app/moveCard', {}, JSON.stringify(newCard));
   };
 
   const createNewCard = () => {
@@ -312,6 +318,9 @@ const BoardRoom = () => {
     console.log(payload);
 
     const payloadData = JSON.parse(payload.body);
+    payloadData.resultData = JSON.parse(payloadData.resultData);
+
+    dispatch(moveCard(payloadData));
     // $
     // debugger;;
   };
