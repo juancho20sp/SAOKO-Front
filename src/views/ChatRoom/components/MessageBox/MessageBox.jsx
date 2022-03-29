@@ -1,32 +1,34 @@
 import React from 'react';
 import styles from './MessageBox.module.scss';
 
-const MessageBox = ({ messageSent, senderName, time, message }) => {
+const MessageBox = ({ messageSent, senderName, date, message }) => {
+  const ADMIN = 'ADMIN';
+
   return (
     <div
       className={styles['messageBox-container']}
       style={{
-        marginLeft: messageSent ? 'auto' : '',
         backgroundColor:
-          senderName === 'ADMIN'
+          senderName === ADMIN
             ? '#8884FF'
             : messageSent
             ? '#FDE2FF'
             : '#D7BCE8',
 
         // ADMIN MESSAGES
-        width: senderName === 'ADMIN' ? '95%' : '',
-        margin: senderName === 'ADMIN' ? '15px auto' : '',
-        minHeight: senderName === 'ADMIN' ? 'auto' : '',
-        textAlign: senderName === 'ADMIN' ? 'center' : '',
+        width: senderName === ADMIN ? '95%' : '',
+        margin: senderName === ADMIN ? '15px auto' : '',
+        minHeight: senderName === ADMIN ? 'auto' : '',
+        textAlign: senderName === ADMIN ? 'center' : '',
+        marginLeft: messageSent ? 'auto' : '',
       }}
     >
       <div className={styles['messageBox-info']}>
         {/* Validate if the message is sent by the current user */}
-        {messageSent && (
+        {!messageSent && senderName !== ADMIN && (
           <p className={styles['messageBox-username']}>{senderName}</p>
         )}
-        <p className={styles['messageBox-time']}>{time}</p>
+        <p className={styles['messageBox-time']}>{date}</p>
       </div>
 
       <p className={styles['messageBox-message']}>{message}</p>

@@ -121,11 +121,14 @@ const ChatRoom = () => {
 
   const sendPrivateValue = () => {
     if (stompClient) {
+      const date = new Date();
+
       const chatMessage = {
         senderName: username,
         receiverName: receiverName,
         message: message,
         messageStatus: 'MESSAGE',
+        date: `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`,
       };
 
       //$
@@ -153,8 +156,15 @@ const ChatRoom = () => {
     console.log(payload);
 
     const payloadData = JSON.parse(payload.body);
+
     // $
     debugger;
+
+    // Value added in order to see if its a message sent or received
+    const messageSent = payloadData.senderName === username;
+
+    payloadData.messageSent = messageSent;
+
     dispatch(addMessageToChatRoom(payloadData));
   };
 
