@@ -69,7 +69,6 @@ const useChatRoomConstants = () => {
 const useChatRoomEvents = ({ receiverName, username, userJoin }) => {
   const dispatch = useDispatch();
 
-  // Events
   const onConnected = () => {
     stompClient.subscribe(
       '/user/' + receiverName + '/private',
@@ -191,12 +190,6 @@ const useAutoScroll = () => {
     lastMessageRef,
   };
 };
-
-/**
- * TODO
- * Assign the room code using the path
- * Send all the messages to the room
- */
 
 const ChatRoom = () => {
   const { path } = useChatRoomPath();
