@@ -7,9 +7,12 @@ import { modalOptions } from '../../utils/modal/modal';
 // Components
 import { Button, RoomCode, Input } from './components';
 
-// Redux
+// State Management
 import { useDispatch } from 'react-redux';
-import { setNewChatRoom } from '../../redux/slices/roomSlice';
+import { setNewChatRoom, setNewBoardRoom } from '../../redux/slices/roomSlice';
+
+// Utils
+import { v4 as uuidv4 } from 'uuid';
 
 const useModalType = (type, setModalType, setIsShowing, dispatch) => {
   const handleCloseModal = () => {
@@ -21,12 +24,13 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
       const handleCreateChat = () => {
         setModalType(modalOptions.shareChat);
 
-        // $
         // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
         const newRoom = {
           id: Math.floor(100000000 + Math.random() * 900000000),
           name: 'New Chat',
-          path: 'new-chat',
+          path: [...uuidv4()].splice(0, 8).join('').toUpperCase(),
+          messages: [],
+          isConnected: false,
         };
 
         dispatch(setNewChatRoom(newRoom));
@@ -80,11 +84,26 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
         // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
         const newRoom = {
           id: Math.floor(100000000 + Math.random() * 900000000),
-          name: 'New Chat',
-          path: 'new-chat',
+          name: 'Board',
+          path: [...uuidv4()].splice(0, 8).join('').toUpperCase(),
+          columns: {
+            TO_DO: {
+              name: 'To Do',
+              items: [],
+            },
+            IN_PROGRESS: {
+              name: 'In Progress',
+              items: [],
+            },
+            DONE: {
+              name: 'Done',
+              items: [],
+            },
+          },
+          isConnected: false,
         };
 
-        dispatch(setNewChatRoom(newRoom));
+        dispatch(setNewBoardRoom(newRoom));
       };
 
       const handleUseBoardCode = () => {

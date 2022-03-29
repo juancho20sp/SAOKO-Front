@@ -102,14 +102,14 @@ export const roomSlice = createSlice({
         setNewChatRoom: (state, action) => {
             state.chatRooms = [...state.chatRooms, action.payload];
         },
+        setNewBoardRoom: (state, action) => {
+          state.boardRooms = [...state.boardRooms, action.payload];
+      },
 
         addMessageToChatRoom: (state, action) => {
-          // $
-          // debugger;;
           const room = state.chatRooms.filter(room => room.path === action.payload.receiverName)[0];
 
           const idx = state.chatRooms.findIndex(room => room.path === action.payload.receiverName)
-          // room.messages.push(action.payload);
 
           state.chatRooms[idx] = {...room,
             messages: [...room.messages, action.payload]
@@ -117,9 +117,6 @@ export const roomSlice = createSlice({
         },
 
         setConnected: (state, action) => {
-          // $
-          // debugger;;
-
           let rooms;
           let roomLabel;
 
@@ -148,8 +145,6 @@ export const roomSlice = createSlice({
         },
 
         addCardToColumn: (state, action) => {
-          // $
-          // debugger;;
           const { from, to, path, card } = action.payload;
 
           let room = state.boardRooms.find(room => room.path === path);
@@ -160,9 +155,6 @@ export const roomSlice = createSlice({
           if (!from) {
             const targetItems = [...room.columns.TO_DO.items];
             room.columns.TO_DO.items = [...new Set([...targetItems, card])];
-
-            console.log('NEW SET FROM REDUX')
-            console.log(room.columns.TO_DO.items)
           } 
 
         },
@@ -226,5 +218,5 @@ export const roomSlice = createSlice({
     }
 });
 
-export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard } = roomSlice.actions;
+export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard, setNewBoardRoom } = roomSlice.actions;
 export default roomSlice.reducer;
