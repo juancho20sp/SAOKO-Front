@@ -28,6 +28,7 @@ var stompClient = null;
 
 const useChatRoomProps = ({ path }) => {
   const username = useSelector((state) => state.login.username);
+
   const isConnected = useSelector(
     (state) =>
       state.room.chatRooms.filter((room) => room.path === path)[0].isConnected

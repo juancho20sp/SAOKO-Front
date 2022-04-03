@@ -8,32 +8,55 @@ import { modalOptions } from '../../utils/modal/modal';
 import { Button, RoomCode, Input } from './components';
 
 // State Management
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNewChatRoom, setNewBoardRoom } from '../../redux/slices/roomSlice';
 
 // Utils
 import { v4 as uuidv4 } from 'uuid';
+import { post } from '../../utils';
 
 const useModalType = (type, setModalType, setIsShowing, dispatch) => {
+  // $
+  const { userId } = useSelector((state) => state.login);
+
   const handleCloseModal = () => {
     setIsShowing((isShowing) => !isShowing);
   };
 
   switch (type) {
     case modalOptions.createChat:
-      const handleCreateChat = () => {
-        setModalType(modalOptions.shareChat);
+      const handleCreateChat = async () => {
+        // $
+        // const realID = uuidv4();
+        // const realPath = [...realID].splice(0, 8).join('').toUpperCase()
+        const tempId = Math.floor(100000000 + Math.random() * 900000000);
 
-        // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
-        const newRoom = {
-          id: Math.floor(100000000 + Math.random() * 900000000),
-          name: 'New Chat',
-          path: [...uuidv4()].splice(0, 8).join('').toUpperCase(),
-          messages: [],
-          isConnected: false,
+        const url = `${process.env.REACT_APP_BACKEND_URL}/room`;
+
+        const data = {
+          roomID: tempId,
+          roomName: 'New chat',
+          roomType: 'CHAT',
+          userId: userId,
+          roomCode: tempId,
         };
 
-        dispatch(setNewChatRoom(newRoom));
+        // TODO
+        // Corregir el télefono en el usuario y al momento de crear usuario
+        // Verificar las salas
+        // Agregar la ultima sala al redux para usar el código en el modal
+
+        try {
+          const newRoomData = await post(url, data);
+
+          debugger;
+
+          dispatch(setNewChatRoom(newRoomData));
+
+          setModalType(modalOptions.shareChat);
+        } catch (err) {
+          console.error(err);
+        }
       };
 
       const handleUseChatCode = () => {

@@ -25,12 +25,11 @@
     }
 
     .layout-container {
-
         max-height: 100%;
         max-width: 100%;
 
-        display: grid;
-        grid-template-rows: auto 1fr;
+        display: flex;
+        flex-direction: column;
 
         // $
         overflow: auto;

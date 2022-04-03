@@ -9,7 +9,8 @@ export const loginSlice = createSlice({
         firstName: '',
         lastName: '',
         role: '',
-        cellphone: ''
+        cellphone: '',
+        userId: ''
     },
     reducers: {
         login: (state, action) => {
@@ -17,7 +18,8 @@ export const loginSlice = createSlice({
                 email,
                 firstName,
                 lastName,
-                role
+                role,
+                userId
             } = action.payload
             
             state.isLoggedIn = true;
@@ -26,6 +28,7 @@ export const loginSlice = createSlice({
             state.lastName = lastName;
             state.email = email;
             state.role = role;
+            state.userId = userId;
         },
         logout: (state) => {
             state.isLoggedIn = false;
@@ -34,6 +37,7 @@ export const loginSlice = createSlice({
             state.lastName = '';
             state.email = '';
             state.role = '';
+            state.userId = '';
         }
     }
 });

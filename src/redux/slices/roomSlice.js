@@ -11,25 +11,25 @@ export const roomSlice = createSlice({
         chatRooms: [
             {
                 id: 0,
-                name: 'Chat 1',
-                path: 'chat-one',
+                name: 'General',
+                path: 'general',
                 messages: [],
                 isConnected: false,
               },
-              {
-                id: 1,
-                name: 'Chat 2',
-                path: 'chat-two',
-                messages: [],
-                isConnected: false,
-              },
-              {
-                id: 2,
-                name: 'Chat 3',
-                path: 'chat-three',
-                messages: [],
-                isConnected: false,
-              },
+              // {
+              //   id: 1,
+              //   name: 'Chat 2',
+              //   path: 'chat-two',
+              //   messages: [],
+              //   isConnected: false,
+              // },
+              // {
+              //   id: 2,
+              //   name: 'Chat 3',
+              //   path: 'chat-three',
+              //   messages: [],
+              //   isConnected: false,
+              // },
         ],
         boardRooms: [
             {
@@ -93,12 +93,28 @@ export const roomSlice = createSlice({
                 isConnected: false,
               },
         ],
-        newRoom: {},
+        lastAddedRoom: {},
     },
     reducers: {
         setChatRooms: (state, action) => {
-            state.chatRooms = [ ...action.payload];
+            const generalChatroom = {
+              id: 0,
+              name: 'General',
+              path: 'general',
+              messages: [],
+              isConnected: false,
+            };
+
+            // $
+            debugger;
+
+            state.chatRooms = [generalChatroom, ...action.payload];
         },
+
+        setLastAddedRoom: (state, action) => {
+          state.lastAddedRoom = action.payload;
+        },
+
         setNewChatRoom: (state, action) => {
             state.chatRooms = [...state.chatRooms, action.payload];
         },
@@ -218,5 +234,5 @@ export const roomSlice = createSlice({
     }
 });
 
-export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard, setNewBoardRoom } = roomSlice.actions;
+export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard, setNewBoardRoom, setLastAddedRoom } = roomSlice.actions;
 export default roomSlice.reducer;

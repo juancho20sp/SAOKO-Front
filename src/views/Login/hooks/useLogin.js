@@ -15,7 +15,9 @@ const useLogin = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
   
-    const [email, setEmail] = useState('frailejon@gmail.com');
+    // $ 
+    // TODO -> clean this before deploy
+    const [email, setEmail] = useState('frailejonxddx@gmail.com');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
   
