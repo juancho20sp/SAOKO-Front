@@ -10,11 +10,18 @@ import { useLogin } from './hooks';
 const Login = () => {
   const {
     isLoading,
+    setIsLoading,
     setEmail,
     setPassword,
     handleSignInClick,
     handleLogInClick,
   } = useLogin();
+
+  useEffect(() => {
+    return () => {
+      setIsLoading(false);
+    };
+  }, [setIsLoading]);
 
   return (
     <main className={styles['login-main']}>

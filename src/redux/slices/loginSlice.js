@@ -8,7 +8,8 @@ export const loginSlice = createSlice({
         email: '',
         firstName: '',
         lastName: '',
-        role: ''
+        role: '',
+        cellphone: ''
     },
     reducers: {
         login: (state, action) => {
