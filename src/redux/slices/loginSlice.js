@@ -4,14 +4,35 @@ export const loginSlice = createSlice({
     name: 'login',
     initialState: {
         isLoggedIn: false,
-        username: `user #${Math.floor(Math.random() * 1000 + 1)}`
+        username: '',
+        email: '',
+        firstName: '',
+        lastName: '',
+        role: ''
     },
     reducers: {
-        login: (state) => {
+        login: (state, action) => {
+            const {
+                email,
+                firstName,
+                lastName,
+                role
+            } = action.payload
+            
             state.isLoggedIn = true;
+            state.username = `${firstName} ${lastName}`;
+            state.firstName = firstName;
+            state.lastName = lastName;
+            state.email = email;
+            state.role = role;
         },
         logout: (state) => {
             state.isLoggedIn = false;
+            state.username = '';
+            state.firstName = '';
+            state.lastName = '';
+            state.email = '';
+            state.role = '';
         }
     }
 });
