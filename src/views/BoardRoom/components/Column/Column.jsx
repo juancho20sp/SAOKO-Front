@@ -5,7 +5,6 @@ const Column = ({ reference, snapshot, droppableProps, children }) => {
   return (
     <div
       {...droppableProps}
-      // $
       className={styles['boardRoom-column']}
       ref={reference}
       style={{

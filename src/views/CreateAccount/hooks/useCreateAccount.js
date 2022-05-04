@@ -40,24 +40,10 @@ const useCreateAccount = () => {
         alert('Las contraseñas no coinciden');
         return;
       }
-  
-      // const url = `${process.env.REACT_APP_BACKEND_URL}/user/register`;
-      // const data = {
-      //   firstName,
-      //   lastName,
-      //   email,
-      //   password: firstPassword,
-  
-      //   // $ -> remove
-      //   cell: '32424345',
-      //   role: 'test',
-      // };
-  
+    
       setIsLoading(true);
 
-      // $
-      debugger;
-
+  
       UserPool.signUp(
         email,
         firstPassword,
@@ -70,10 +56,6 @@ const useCreateAccount = () => {
             Name: 'family_name',
             Value: lastName,
           },
-          // {
-          //   Name: 'phone_number',
-          //   Value: cellphone,
-          // },
         ],
         null,
         (err, data) => {

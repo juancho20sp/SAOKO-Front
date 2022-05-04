@@ -88,8 +88,6 @@ const useAccount = () => {
                     setIsLoading(false);
                     resolve(data);
                     
-                    // $
-                    debugger;
                     dispatch(login(JSON.stringify(data))); 
                     
                     // Set user attributes
@@ -101,7 +99,6 @@ const useAccount = () => {
                 },
                 onFailure: (err) => {
                     setIsLoading(false);
-                    console.log(err);
                     reject(err);
                 },
                 newPasswordRequired: (data) => {

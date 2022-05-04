@@ -18,36 +18,12 @@ export const loginSlice = createSlice({
     name: 'login',
     initialState: getFromLocalStorage('globalState') ? getFromLocalStorage('globalState') : {
         isLoggedIn: false,
-        // username: '',
-        // email: '',
-        // firstName: '',
-        // lastName: '',
-        // role: '',
-        // cellphone: '',
-        // userId: '',
         awsUserData: {},
         userData: {}
     },
     reducers: {
-        login: (state, action) => {
-            // const {
-            //     email,
-            //     firstName,
-            //     lastName,
-            //     role,
-            //     userId
-            // } = JSON.parse(action.payload);
-
-            // // $
-            // debugger;
-            
+        login: (state, action) => {            
             state.isLoggedIn = true;
-            // state.username = `${firstName} ${lastName}`;
-            // state.firstName = firstName;
-            // state.lastName = lastName;
-            // state.email = email;
-            // state.role = role;
-            // state.userId = userId;
 
             if (action.payload) {
                 state.awsUserData = {...JSON.parse(action.payload)};
@@ -66,9 +42,6 @@ export const loginSlice = createSlice({
             saveToLocalStorage(state);
         },
         setUserData: (state, action) => {
-            // $
-            debugger;
-
             state.userData = {...action.payload};
             saveToLocalStorage(state);
         }

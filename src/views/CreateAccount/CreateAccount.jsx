@@ -82,7 +82,7 @@ const CreateAccount = () => {
                 />
               </div>
 
-              <div className={styles['createAccount-formInput']}>
+              {/* <div className={styles['createAccount-formInput']}>
                 <label htmlFor='createAccountPhone'>Teléfono</label>
                 <input
                   type='text'
@@ -94,7 +94,7 @@ const CreateAccount = () => {
                   value={`${cellphone}`}
                   onChange={(e) => setCellphone(e.target.value.trim())}
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className={styles['createAccount-formRow']}>

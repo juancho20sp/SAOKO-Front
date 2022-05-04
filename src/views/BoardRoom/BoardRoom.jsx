@@ -325,18 +325,7 @@ const BoardRoom = () => {
                                   index={idx}
                                 >
                                   {(provided, snapshot) => {
-                                    // debugger;
                                     return (
-                                      // <div
-                                      //   ref={
-                                      //     activeId ===
-                                      //     provided.draggableProps[
-                                      //       'data-rbd-draggable-id'
-                                      //     ]
-                                      //       ? activeCardRef
-                                      //       : null
-                                      //   }
-                                      // >
                                       <ColumnItem
                                         reference={provided.innerRef}
                                         draggableProps={provided.draggableProps}
@@ -347,20 +336,14 @@ const BoardRoom = () => {
                                         providedDraggablePropsStyle={
                                           provided.draggableProps.style
                                         }
-                                        // $
                                         cardId={
                                           provided.draggableProps[
                                             'data-rbd-draggable-id'
                                           ]
                                         }
-                                        // activeId={activeId}
-                                        // ref={
-                                        //   id == activeId ? activeCardRef : null
-                                        // }
                                       >
                                         {item.content}
                                       </ColumnItem>
-                                      // </div>
                                     );
                                   }}
                                 </Draggable>
