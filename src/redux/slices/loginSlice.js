@@ -1,15 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const saveToLocalStorage = (state) => {
+    localStorage.setItem('globalState', JSON.stringify(state));
+};
+
+const getFromLocalStorage = (keyName) => {
+    const item = localStorage.getItem(keyName);
+
+    if (item) {
+        return JSON.parse(item);
+    }
+
+    return false;
+}
+
 export const loginSlice = createSlice({
     name: 'login',
-    initialState: {
+    initialState: getFromLocalStorage('globalState') ? getFromLocalStorage('globalState') : {
         isLoggedIn: false,
         username: '',
         email: '',
         firstName: '',
         lastName: '',
         role: '',
-        cellphone: ''
+        cellphone: '',
+        userId: ''
     },
     reducers: {
         login: (state, action) => {
@@ -17,7 +32,8 @@ export const loginSlice = createSlice({
                 email,
                 firstName,
                 lastName,
-                role
+                role,
+                userId
             } = action.payload
             
             state.isLoggedIn = true;
@@ -26,6 +42,9 @@ export const loginSlice = createSlice({
             state.lastName = lastName;
             state.email = email;
             state.role = role;
+            state.userId = userId;
+
+            saveToLocalStorage(state);
         },
         logout: (state) => {
             state.isLoggedIn = false;
@@ -34,6 +53,8 @@ export const loginSlice = createSlice({
             state.lastName = '';
             state.email = '';
             state.role = '';
+
+            saveToLocalStorage(state);
         }
     }
 });

@@ -91,7 +91,7 @@ const CreateAccount = () => {
                   // TODO -> put a mask
                   placeholder='+57 (352) 960 - 4545'
                   className={styles['createAccount-input']}
-                  value={cellphone}
+                  value={`${cellphone}`}
                   onChange={(e) => setCellphone(e.target.value.trim())}
                 />
               </div>
