@@ -17,19 +17,14 @@ import { useAccount } from '../../../utils/hooks';
 
 const useLogin = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
   
-    const [email, setEmail] = useState('Prueba1@gmail.com');
-    const [password, setPassword] = useState('Prueba1*');
-    // $
-    // const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const { authenticate, isLoading } = useAccount();
   
     const handleSignInClick = (event) => {
       event.preventDefault();
-      // $
-      console.log('sign in clicked');
       navigate(routes.signIn.path);
     };
   
