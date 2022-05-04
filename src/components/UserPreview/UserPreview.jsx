@@ -21,7 +21,9 @@ const UserPreview = () => {
   const navigate = useNavigate();
 
   // Redux
-  const username = useSelector((state) => state.login.username);
+  const { userData } = useSelector((state) => state.login);
+
+  const username = `${userData.name} ${userData.family_name}`;
 
   return (
     <div

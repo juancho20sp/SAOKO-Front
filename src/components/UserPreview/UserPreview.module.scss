@@ -26,6 +26,10 @@
     .userModule-username {
         text-transform: uppercase;
 
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
         @include xs {
             font-size: $small;
         }
