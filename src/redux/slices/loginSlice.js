@@ -18,31 +18,40 @@ export const loginSlice = createSlice({
     name: 'login',
     initialState: getFromLocalStorage('globalState') ? getFromLocalStorage('globalState') : {
         isLoggedIn: false,
-        username: '',
-        email: '',
-        firstName: '',
-        lastName: '',
-        role: '',
-        cellphone: '',
-        userId: ''
+        // username: '',
+        // email: '',
+        // firstName: '',
+        // lastName: '',
+        // role: '',
+        // cellphone: '',
+        // userId: '',
+        awsUserData: {},
+        userData: {}
     },
     reducers: {
         login: (state, action) => {
-            const {
-                email,
-                firstName,
-                lastName,
-                role,
-                userId
-            } = action.payload
+            // const {
+            //     email,
+            //     firstName,
+            //     lastName,
+            //     role,
+            //     userId
+            // } = JSON.parse(action.payload);
+
+            // // $
+            // debugger;
             
             state.isLoggedIn = true;
-            state.username = `${firstName} ${lastName}`;
-            state.firstName = firstName;
-            state.lastName = lastName;
-            state.email = email;
-            state.role = role;
-            state.userId = userId;
+            // state.username = `${firstName} ${lastName}`;
+            // state.firstName = firstName;
+            // state.lastName = lastName;
+            // state.email = email;
+            // state.role = role;
+            // state.userId = userId;
+
+            if (action.payload) {
+                state.awsUserData = {...JSON.parse(action.payload)};
+            }
 
             saveToLocalStorage(state);
         },
@@ -55,13 +64,21 @@ export const loginSlice = createSlice({
             state.role = '';
 
             saveToLocalStorage(state);
+        },
+        setUserData: (state, action) => {
+            // $
+            debugger;
+
+            state.userData = {...action.payload};
+            saveToLocalStorage(state);
         }
     }
 });
 
 export const {
     login,
-    logout
+    logout,
+    setUserData
 } = loginSlice.actions;
 
 export default loginSlice.reducer;

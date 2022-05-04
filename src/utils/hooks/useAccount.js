@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Redux
 import { useDispatch } from 'react-redux';
-import { login, logout as reduxLogout } from '../../redux/slices/loginSlice';
+import { login, logout as reduxLogout, setUserData } from '../../redux/slices/loginSlice';
 
 // AWS
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
@@ -88,12 +88,14 @@ const useAccount = () => {
                     setIsLoading(false);
                     resolve(data);
                     
+                    // $
+                    debugger;
                     dispatch(login(JSON.stringify(data))); 
                     
                     // Set user attributes
-                    // getSession().then(({attributes}) =>{
-                    //     dispatch(setUserData(attributes));
-                    // });
+                    getSession().then(({attributes}) =>{
+                        dispatch(setUserData(attributes));
+                    });
 
                     navigate(routes.home.path);                 
                 },
@@ -109,9 +111,9 @@ const useAccount = () => {
                     dispatch(login(JSON.stringify(data)));
 
                     // Set user attributes
-                    // getSession().then(({attributes}) =>{
-                    //     dispatch(setUserData(attributes));
-                    // });
+                    getSession().then(({attributes}) =>{
+                        dispatch(setUserData(attributes));
+                    });
 
                     navigate(routes.home.path); 
                 },

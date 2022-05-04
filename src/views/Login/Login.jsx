@@ -17,11 +17,11 @@ const Login = () => {
     handleLogInClick,
   } = useLogin();
 
-  useEffect(() => {
-    return () => {
-      setIsLoading(false);
-    };
-  }, [setIsLoading]);
+  // useEffect(() => {
+  //   return () => {
+  //     setIsLoading(false);
+  //   };
+  // }, [setIsLoading]);
 
   return (
     <main className={styles['login-main']}>
