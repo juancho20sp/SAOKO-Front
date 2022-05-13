@@ -15,7 +15,7 @@ import {
 
 // Components
 import { CreateTask, ColumnContainer, Column, ColumnItem } from './components/';
-import { Layout } from '../../components';
+import { Layout, Loader } from '../../components';
 
 // Drag and drop
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -65,7 +65,7 @@ const useBoardRoomProps = ({ path }) => {
   };
 };
 
-const useBoardRoomEvents = ({ roomId, userJoin }) => {
+const useBoardRoomEvents = ({ roomId, userJoin, setIsLoading }) => {
   const dispatch = useDispatch();
 
   const { path } = useRoomPath();
@@ -82,6 +82,7 @@ const useBoardRoomEvents = ({ roomId, userJoin }) => {
     stompClient.subscribe('/user/' + roomId + '/moveCard', onCardMoved);
 
     userJoin();
+    setIsLoading(false);
   };
 
   const onError = (err) => {
@@ -145,7 +146,7 @@ const useBoardRoomEvents = ({ roomId, userJoin }) => {
   };
 };
 
-const useBoardRoomLogic = ({ path }) => {
+const useBoardRoomLogic = ({ path, setIsLoading }) => {
   // States
   const [roomId] = useState(path);
   const [activeId, setActiveId] = useState('');
@@ -153,12 +154,16 @@ const useBoardRoomLogic = ({ path }) => {
 
   const dispatch = useDispatch();
 
+  const { name, family_name } = useSelector((state) => state.login.userData);
+  const username = `${name} ${family_name}`;
+
   const { onConnected, onError } = useBoardRoomEvents({
     roomId,
     userJoin,
+    setIsLoading,
   });
 
-  const { isConnected, columns, username } = useBoardRoomProps({ path });
+  const { isConnected, columns } = useBoardRoomProps({ path });
 
   const { URL } = useBoardRoomConstants();
 
@@ -248,6 +253,8 @@ const useBoardRoomLogic = ({ path }) => {
 };
 
 const BoardRoom = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { path } = useRoomPath();
 
   const { columns, username, isConnected } = useBoardRoomProps({ path });
@@ -261,10 +268,12 @@ const BoardRoom = () => {
     onDragEnd,
   } = useBoardRoomLogic({
     path,
+    setIsLoading,
   });
 
   useEffect(() => {
     if (roomId && !isConnected) {
+      setIsLoading(true);
       connect();
     }
   }, [roomId, isConnected]);
@@ -287,81 +296,89 @@ const BoardRoom = () => {
 
   return (
     <Layout>
-      <div className={styles['boardRoom-main']}>
-        <div className={styles['boardRoom-container']}>
-          <header className={styles['boardRoom-header']}>
-            {/* TODO */}
-            <div>
-              <p>Miembros</p>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className={styles['boardRoom-main']}>
+          <div className={styles['boardRoom-container']}>
+            <header className={styles['boardRoom-header']}>
+              {/* TODO */}
+              <div>
+                <p style={{ visibility: 'hidden' }}>Bienvenido</p>
+              </div>
+
+              <h2 className={styles['boardRoom-header_title']}>
+                Tablero Kanban
+              </h2>
+
+              <CreateTask text={'Crear tarea'} handleClick={handleAddTask} />
+            </header>
+
+            <div className={styles['boardRoom-content']}>
+              <DragDropContext
+                onDragStart={({ draggableId }) => onDragStart(draggableId)}
+                onDragEnd={(res) => onDragEnd(res)}
+              >
+                {Object.entries(columns).map(([id, column]) => {
+                  return (
+                    <ColumnContainer key={id} title={column.name}>
+                      <Droppable droppableId={id} key={id}>
+                        {/* Snapshot: the thing i'm dragging */}
+                        {(provided, snapshot) => {
+                          return (
+                            <Column
+                              reference={provided.innerRef}
+                              snapshot={snapshot}
+                              droppableProps={provided.droppableProps}
+                            >
+                              {column.items.map((item, idx) => {
+                                return (
+                                  <Draggable
+                                    key={item.id}
+                                    draggableId={item.id}
+                                    index={idx}
+                                  >
+                                    {(provided, snapshot) => {
+                                      return (
+                                        <ColumnItem
+                                          reference={provided.innerRef}
+                                          draggableProps={
+                                            provided.draggableProps
+                                          }
+                                          dragHandleProps={
+                                            provided.dragHandleProps
+                                          }
+                                          snapshot={snapshot}
+                                          providedDraggablePropsStyle={
+                                            provided.draggableProps.style
+                                          }
+                                          cardId={
+                                            provided.draggableProps[
+                                              'data-rbd-draggable-id'
+                                            ]
+                                          }
+                                        >
+                                          {item.content}
+                                        </ColumnItem>
+                                      );
+                                    }}
+                                  </Draggable>
+                                );
+                              })}
+
+                              {provided.placeholder}
+                            </Column>
+                          );
+                        }}
+                      </Droppable>
+                    </ColumnContainer>
+                  );
+                })}
+              </DragDropContext>
             </div>
-
-            <h2 className={styles['boardRoom-header_title']}>Tablero Kanban</h2>
-
-            <CreateTask text={'Crear tarea'} handleClick={handleAddTask} />
-          </header>
-
-          <div className={styles['boardRoom-content']}>
-            <DragDropContext
-              onDragStart={({ draggableId }) => onDragStart(draggableId)}
-              onDragEnd={(res) => onDragEnd(res)}
-            >
-              {Object.entries(columns).map(([id, column]) => {
-                return (
-                  <ColumnContainer key={id} title={column.name}>
-                    <Droppable droppableId={id} key={id}>
-                      {/* Snapshot: the thing i'm dragging */}
-                      {(provided, snapshot) => {
-                        return (
-                          <Column
-                            reference={provided.innerRef}
-                            snapshot={snapshot}
-                            droppableProps={provided.droppableProps}
-                          >
-                            {column.items.map((item, idx) => {
-                              return (
-                                <Draggable
-                                  key={item.id}
-                                  draggableId={item.id}
-                                  index={idx}
-                                >
-                                  {(provided, snapshot) => {
-                                    return (
-                                      <ColumnItem
-                                        reference={provided.innerRef}
-                                        draggableProps={provided.draggableProps}
-                                        dragHandleProps={
-                                          provided.dragHandleProps
-                                        }
-                                        snapshot={snapshot}
-                                        providedDraggablePropsStyle={
-                                          provided.draggableProps.style
-                                        }
-                                        cardId={
-                                          provided.draggableProps[
-                                            'data-rbd-draggable-id'
-                                          ]
-                                        }
-                                      >
-                                        {item.content}
-                                      </ColumnItem>
-                                    );
-                                  }}
-                                </Draggable>
-                              );
-                            })}
-
-                            {provided.placeholder}
-                          </Column>
-                        );
-                      }}
-                    </Droppable>
-                  </ColumnContainer>
-                );
-              })}
-            </DragDropContext>
           </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 };
