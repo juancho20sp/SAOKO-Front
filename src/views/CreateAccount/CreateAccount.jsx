@@ -16,8 +16,6 @@ const CreateAccount = () => {
     setLastName,
     email,
     setEmail,
-    cellphone,
-    setCellphone,
     firstPassword,
     setFirstPassword,
     secondPassword,
@@ -82,20 +80,6 @@ const CreateAccount = () => {
                   onChange={(e) => setEmail(e.target.value.trim())}
                 />
               </div>
-
-              {/* <div className={styles['createAccount-formInput']}>
-                <label htmlFor='createAccountPhone'>Teléfono</label>
-                <input
-                  type='text'
-                  id='createAccountPhone'
-                  // $
-                  // TODO -> put a mask
-                  placeholder='+57 (352) 960 - 4545'
-                  className={styles['createAccount-input']}
-                  value={`${cellphone}`}
-                  onChange={(e) => setCellphone(e.target.value.trim())}
-                />
-              </div> */}
             </div>
 
             <div className={styles['createAccount-formRow']}>

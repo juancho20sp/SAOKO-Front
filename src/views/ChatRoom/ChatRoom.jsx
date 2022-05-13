@@ -219,8 +219,6 @@ const ChatRoom = () => {
   const { lastMessageRef } = useAutoScroll();
 
   useEffect(() => {
-    // $
-    debugger;
     if (username && receiverName && !isConnected) {
       setIsLoading(true);
       connect();

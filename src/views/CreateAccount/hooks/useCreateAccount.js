@@ -86,17 +86,6 @@ const useCreateAccount = () => {
           }
         }
       )
-
-  
-      // try {
-      //   const newUserData = await post(url, data);
-  
-      //   navigate(routes.login.path);
-      // } catch (err) {
-      //   console.error(err);
-      // } finally {
-      //   setIsLoading(false);
-      // }
     };
 
     const handleKeyPress = (event) => {

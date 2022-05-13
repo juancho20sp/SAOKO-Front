@@ -162,7 +162,6 @@ const useModalType = (
             title={modalOptions.enterBoard.secondRow.firstOption.title}
             handleClick={handleCloseModal}
           />
-          {/* // $ */}
           <Button
             title={modalOptions.enterBoard.secondRow.secondOption.title}
             handleClick={() => {

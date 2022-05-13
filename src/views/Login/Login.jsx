@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from './Login.module.scss';
 
 // Components
@@ -17,12 +17,6 @@ const Login = () => {
     handleLogInClick,
     handleKeyPress,
   } = useLogin();
-
-  // useEffect(() => {
-  //   return () => {
-  //     setIsLoading(false);
-  //   };
-  // }, [setIsLoading]);
 
   return (
     <main className={styles['login-main']}>
