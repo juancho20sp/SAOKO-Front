@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './BoardRoom.module.scss';
 
-// Routing
-import { useLocation } from 'react-router-dom';
-
 // State Management
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -187,7 +184,7 @@ const useBoardRoomLogic = ({ path, setIsLoading }) => {
   }
 
   const onDragStart = (cardId) => {
-    const card = allCards.filter((card) => card.id === cardId)[0];
+    const card = allCards.filter((item) => item.id === cardId)[0];
 
     setActiveId(cardId);
 
@@ -217,7 +214,7 @@ const useBoardRoomLogic = ({ path, setIsLoading }) => {
 
     dispatch(moveCard(payloadData));
 
-    const card = allCards.filter((card) => card.id === result.draggableId)[0];
+    const card = allCards.filter((item) => item.id === result.draggableId)[0];
 
     const newCard = { ...card };
     newCard.resultData = JSON.stringify(payloadData);
@@ -257,7 +254,7 @@ const BoardRoom = () => {
 
   const { path } = useRoomPath();
 
-  const { columns, username, isConnected } = useBoardRoomProps({ path });
+  const { columns, isConnected } = useBoardRoomProps({ path });
 
   const {
     roomId,
@@ -302,7 +299,6 @@ const BoardRoom = () => {
         <div className={styles['boardRoom-main']}>
           <div className={styles['boardRoom-container']}>
             <header className={styles['boardRoom-header']}>
-              {/* TODO */}
               <div>
                 <p style={{ visibility: 'hidden' }}>Bienvenido</p>
               </div>
