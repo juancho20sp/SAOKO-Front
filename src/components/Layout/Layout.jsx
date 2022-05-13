@@ -1,14 +1,8 @@
 import React from 'react';
-
 import styles from './Layout.module.scss';
 
-// Router
-// import { routes } from '../../utils/routes/routes';
-// import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
-// // Components
-import { Navbar, Banner, ProtectedRoute, Chats } from '../';
-// import { WelcomeMessage } from './components';
+// Components
+import { Navbar, Banner } from '../';
 
 const Layout = ({ children }) => {
   return (
@@ -17,16 +11,6 @@ const Layout = ({ children }) => {
 
       <div className={styles['layout-container']}>
         <Banner />
-        {/* ROUTER AQUÍ */}
-        {/* <BrowserRouter>
-          <Routes>
-            <Route element={<ProtectedRoute />}>
-              <Route exact path={routes.chats.path} element={<Chats />}></Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
-        <Route></Route> */}
-        {/* <WelcomeMessage /> */}
         <div className={styles['layout-container__content']}>{children}</div>
       </div>
     </main>

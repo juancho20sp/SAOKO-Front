@@ -7,7 +7,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 // Redux
 import { useSelector } from 'react-redux';
 
-const UnprotectedRoute = ({ children }) => {
+const UnprotectedRoute = () => {
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
 
   return isLoggedIn ? <Navigate to={routes.home.path} replace /> : <Outlet />;

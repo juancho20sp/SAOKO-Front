@@ -77,7 +77,7 @@ function App() {
         <Modal
           isShowing={isShowing}
           type={modalType}
-          code={code}
+          code={null}
           setModalType={setModalType}
           setIsShowing={setIsShowing}
         />

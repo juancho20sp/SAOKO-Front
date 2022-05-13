@@ -6,8 +6,6 @@ export const BOARD = 'BOARD';
 export const roomSlice = createSlice({
     name: 'room',
     initialState: {
-        // $
-        // TODO -> eliminar esto
         chatRooms: [
             {
                 id: 0,

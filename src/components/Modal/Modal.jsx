@@ -40,7 +40,6 @@ const useModalType = (
 
         const roomId = [...uuidv4()].splice(0, 8).join('').toUpperCase();
 
-        // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
         const newRoom = {
           id: Math.floor(100000000 + Math.random() * 900000000),
           name: roomId,
@@ -98,14 +97,11 @@ const useModalType = (
         </div>,
       ];
 
-    // ----
     case modalOptions.createBoard:
       const handleCreateBoard = () => {
         setModalType(modalOptions.shareBoard);
 
         const roomId = [...uuidv4()].splice(0, 8).join('').toUpperCase();
-        // $
-        // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
         const newRoom = {
           id: Math.floor(100000000 + Math.random() * 900000000),
           name: roomId,
@@ -185,12 +181,11 @@ const useModalType = (
  *
  * @param {Boolean} isShowing -> True if the modal is showing, false otherwise
  * @param {modalOptions} type -> The type of the displayed modal.
- * @param {String} code -> The code of the room.
  * @param {Function} setModalType -> The function that allows to change the modal type, setted on App.jsx
  * @param {Function} setIsShowing -> The function that allows to change the visibility of the modal, setted on App.jsx
  * @returns
  */
-const Modal = ({ isShowing, type, code, setModalType, setIsShowing }) => {
+const Modal = ({ isShowing, type, setModalType, setIsShowing }) => {
   // Routing
   const navigate = useNavigate();
 
@@ -215,7 +210,7 @@ const Modal = ({ isShowing, type, code, setModalType, setIsShowing }) => {
   return (
     <div
       className={styles['modal-overlay']}
-      onClick={() => setIsShowing((isShowing) => !isShowing)}
+      onClick={() => setIsShowing((prevState) => !prevState)}
     >
       <div
         className={styles['modal-main']}
