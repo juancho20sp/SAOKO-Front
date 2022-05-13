@@ -27,7 +27,7 @@ import { useRoomPath } from '../../utils/hooks';
 var stompClient = null;
 
 const useChatRoomProps = ({ path }) => {
-  const username = useSelector((state) => state.login.username);
+  const { name, family_name } = useSelector((state) => state.login.userData);
   const isConnected = useSelector(
     (state) =>
       state.room.chatRooms.filter((room) => room.path === path)[0].isConnected
@@ -36,6 +36,8 @@ const useChatRoomProps = ({ path }) => {
     (state) =>
       state.room.chatRooms.filter((room) => room.path === path)[0].messages
   );
+
+  const username = `${name} ${family_name}`;
 
   return {
     username,
@@ -204,6 +206,8 @@ const ChatRoom = () => {
   const { lastMessageRef } = useAutoScroll();
 
   useEffect(() => {
+    // $
+    debugger;
     if (username && receiverName && !isConnected) {
       connect();
     }
