@@ -103,12 +103,13 @@ const useModalType = (
       const handleCreateBoard = () => {
         setModalType(modalOptions.shareBoard);
 
+        const roomId = [...uuidv4()].splice(0, 8).join('').toUpperCase();
         // $
         // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
         const newRoom = {
           id: Math.floor(100000000 + Math.random() * 900000000),
-          name: 'Board',
-          path: [...uuidv4()].splice(0, 8).join('').toUpperCase(),
+          name: roomId,
+          path: roomId,
           columns: {
             TO_DO: {
               name: 'To Do',
@@ -127,6 +128,7 @@ const useModalType = (
         };
 
         dispatch(setNewBoardRoom(newRoom));
+        dispatch(setCreatedCode(roomId));
       };
 
       const handleUseBoardCode = () => {
@@ -167,6 +169,10 @@ const useModalType = (
           {/* // $ */}
           <Button
             title={modalOptions.enterBoard.secondRow.secondOption.title}
+            handleClick={() => {
+              navigate(`boards/${newRoomCode}`);
+              handleCloseModal();
+            }}
           />
         </div>,
       ];
