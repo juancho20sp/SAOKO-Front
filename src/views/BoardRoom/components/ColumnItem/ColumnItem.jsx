@@ -1,9 +1,6 @@
 import React from 'react';
 import styles from './ColumnItem.module.scss';
 
-// State Management
-import { useSelector } from 'react-redux';
-
 const ColumnItem = ({
   reference,
   children,

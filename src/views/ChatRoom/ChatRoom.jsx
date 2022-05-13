@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './ChatRoom.module.scss';
 
-// Routing
-import { useLocation } from 'react-router-dom';
-
 // State Management
 import { useSelector, useDispatch } from 'react-redux';
 import {
