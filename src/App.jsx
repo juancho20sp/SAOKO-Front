@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState } from 'react';
 import styles from './App.module.scss';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -29,11 +29,9 @@ import {
 import { ModalContext } from './utils';
 
 function App() {
-  // TODO -> Pass this to hook
   // Modal
   const [isShowing, setIsShowing] = useState(false);
   const [modalType, setModalType] = useState(modalOptions.createChat);
-  const [code, setCode] = useState('CODE TEST ON APP.JSX');
 
   return (
     <div className={styles.App}>
