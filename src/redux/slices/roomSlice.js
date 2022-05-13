@@ -94,8 +94,16 @@ export const roomSlice = createSlice({
               },
         ],
         newRoom: {},
+        newRoomCode: '',
+        createdCode: ''
     },
     reducers: {
+        setCreatedCode: (state, action) => {
+          state.createdCode = action.payload;
+        },
+        setNewRoomCode: (state, action) => {
+          state.newRoomCode = action.payload;
+        },
         setChatRooms: (state, action) => {
             state.chatRooms = [ ...action.payload];
         },
@@ -218,5 +226,5 @@ export const roomSlice = createSlice({
     }
 });
 
-export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard, setNewBoardRoom } = roomSlice.actions;
+export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard, setNewBoardRoom, setNewRoomCode, setCreatedCode } = roomSlice.actions;
 export default roomSlice.reducer;

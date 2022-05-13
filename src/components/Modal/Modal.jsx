@@ -7,14 +7,28 @@ import { modalOptions } from '../../utils/modal/modal';
 // Components
 import { Button, RoomCode, Input } from './components';
 
+// Routing
+import { useNavigate } from 'react-router-dom';
+
 // State Management
-import { useDispatch } from 'react-redux';
-import { setNewChatRoom, setNewBoardRoom } from '../../redux/slices/roomSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setNewChatRoom,
+  setNewBoardRoom,
+  setCreatedCode,
+} from '../../redux/slices/roomSlice';
 
 // Utils
 import { v4 as uuidv4 } from 'uuid';
 
-const useModalType = (type, setModalType, setIsShowing, dispatch) => {
+const useModalType = (
+  type,
+  setModalType,
+  setIsShowing,
+  dispatch,
+  navigate,
+  newRoomCode
+) => {
   const handleCloseModal = () => {
     setIsShowing((isShowing) => !isShowing);
   };
@@ -24,16 +38,19 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
       const handleCreateChat = () => {
         setModalType(modalOptions.shareChat);
 
+        const roomId = [...uuidv4()].splice(0, 8).join('').toUpperCase();
+
         // TODO -> ADD LOGIC FOR CREATING A NEW ROOM
         const newRoom = {
           id: Math.floor(100000000 + Math.random() * 900000000),
-          name: 'New Chat',
-          path: [...uuidv4()].splice(0, 8).join('').toUpperCase(),
+          name: roomId,
+          path: roomId,
           messages: [],
           isConnected: false,
         };
 
         dispatch(setNewChatRoom(newRoom));
+        dispatch(setCreatedCode(roomId));
       };
 
       const handleUseChatCode = () => {
@@ -71,7 +88,13 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
             title={modalOptions.enterChat.secondRow.firstOption.title}
             handleClick={handleCloseModal}
           />
-          <Button title={modalOptions.enterChat.secondRow.secondOption.title} />
+          <Button
+            title={modalOptions.enterChat.secondRow.secondOption.title}
+            handleClick={() => {
+              navigate(`chats/${newRoomCode}`);
+              handleCloseModal();
+            }}
+          />
         </div>,
       ];
 
@@ -141,6 +164,7 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
             title={modalOptions.enterBoard.secondRow.firstOption.title}
             handleClick={handleCloseModal}
           />
+          {/* // $ */}
           <Button
             title={modalOptions.enterBoard.secondRow.secondOption.title}
           />
@@ -161,14 +185,21 @@ const useModalType = (type, setModalType, setIsShowing, dispatch) => {
  * @returns
  */
 const Modal = ({ isShowing, type, code, setModalType, setIsShowing }) => {
+  // Routing
+  const navigate = useNavigate();
+
   // Redux
   const dispatch = useDispatch();
+
+  const newRoomCode = useSelector((state) => state.room.newRoomCode);
 
   const [title, firstRow, secondRow] = useModalType(
     type,
     setModalType,
     setIsShowing,
-    dispatch
+    dispatch,
+    navigate,
+    newRoomCode
   );
 
   if (!isShowing) {

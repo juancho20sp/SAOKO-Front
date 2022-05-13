@@ -76,15 +76,14 @@ function App() {
 
           <Route path='*' element={<p>There's nothing here: 404!</p>} />
         </Routes>
+        <Modal
+          isShowing={isShowing}
+          type={modalType}
+          code={code}
+          setModalType={setModalType}
+          setIsShowing={setIsShowing}
+        />
       </BrowserRouter>
-
-      <Modal
-        isShowing={isShowing}
-        type={modalType}
-        code={code}
-        setModalType={setModalType}
-        setIsShowing={setIsShowing}
-      />
     </div>
   );
 }
