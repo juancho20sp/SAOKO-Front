@@ -11,10 +11,19 @@ import { NavbarIcon } from './components';
 
 // Redux
 import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/slices/loginSlice';
+import { logout as reduxLogout } from '../../redux/slices/loginSlice';
+
+// Hooks
+import { useAccount } from '../../utils/hooks';
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const { logout } = useAccount();
+
+  const handleLogout = () => {
+    logout();
+    dispatch(reduxLogout());
+  };
 
   return (
     <aside className={styles['aside-main']}>
@@ -37,7 +46,7 @@ const Navbar = () => {
             icon={MdLogout}
             text={`Cerrar Sesión`}
             path={routes.login.path}
-            onClickFunction={() => dispatch(logout())}
+            onClickFunction={handleLogout}
           ></NavbarIcon>
         </ul>
       </nav>

@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './ChatRoom.module.scss';
 
-// Routing
-import { useLocation } from 'react-router-dom';
-
 // State Management
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -14,7 +11,7 @@ import {
 
 // Components
 import { MessageInput, MessageBox } from './components';
-import { Layout } from '../../components';
+import { Layout, Loader } from '../../components';
 
 // Utils
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +24,7 @@ import { useRoomPath } from '../../utils/hooks';
 var stompClient = null;
 
 const useChatRoomProps = ({ path }) => {
-  const username = useSelector((state) => state.login.username);
+  const { name, family_name } = useSelector((state) => state.login.userData);
   const isConnected = useSelector(
     (state) =>
       state.room.chatRooms.filter((room) => room.path === path)[0].isConnected
@@ -36,6 +33,8 @@ const useChatRoomProps = ({ path }) => {
     (state) =>
       state.room.chatRooms.filter((room) => room.path === path)[0].messages
   );
+
+  const username = `${name} ${family_name}`;
 
   return {
     username,
@@ -62,7 +61,12 @@ const useChatRoomConstants = () => {
   };
 };
 
-const useChatRoomEvents = ({ receiverName, username, userJoin }) => {
+const useChatRoomEvents = ({
+  receiverName,
+  username,
+  userJoin,
+  setIsLoading,
+}) => {
   const dispatch = useDispatch();
 
   const onConnected = () => {
@@ -71,6 +75,7 @@ const useChatRoomEvents = ({ receiverName, username, userJoin }) => {
       onPrivateMessage
     );
     userJoin();
+    setIsLoading(false);
   };
 
   const onError = (err) => {
@@ -97,7 +102,13 @@ const useChatRoomEvents = ({ receiverName, username, userJoin }) => {
   };
 };
 
-const useChatRoomLogic = ({ receiverName, username, isConnected, path }) => {
+const useChatRoomLogic = ({
+  receiverName,
+  username,
+  isConnected,
+  path,
+  setIsLoading,
+}) => {
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
 
@@ -107,6 +118,7 @@ const useChatRoomLogic = ({ receiverName, username, isConnected, path }) => {
     receiverName,
     userJoin,
     username,
+    setIsLoading,
   });
 
   const connect = () => {
@@ -188,6 +200,8 @@ const useAutoScroll = () => {
 };
 
 const ChatRoom = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { path } = useRoomPath();
 
   const { username, isConnected, allMessages } = useChatRoomProps({ path });
@@ -199,12 +213,14 @@ const ChatRoom = () => {
     path,
     receiverName,
     username,
+    setIsLoading,
   });
 
   const { lastMessageRef } = useAutoScroll();
 
   useEffect(() => {
     if (username && receiverName && !isConnected) {
+      setIsLoading(true);
       connect();
     }
   }, [username, receiverName, isConnected]);
@@ -217,18 +233,25 @@ const ChatRoom = () => {
 
   return (
     <Layout>
-      <div className={styles['chatRoom-main']}>
-        <div className={styles['chatRoom-container']}>
-          <div className={styles['chatRoom-messageContainer']}>
-            {allMessages.map((message) => (
-              <MessageBox key={message.id} {...message} />
-            ))}
+      {isLoading ? (
+        <>
+          <Loader />
+          <div ref={lastMessageRef}></div>
+        </>
+      ) : (
+        <div className={styles['chatRoom-main']}>
+          <div className={styles['chatRoom-container']}>
+            <div className={styles['chatRoom-messageContainer']}>
+              {allMessages.map((message) => (
+                <MessageBox key={message.id} {...message} />
+              ))}
 
-            <div ref={lastMessageRef}></div>
+              <div ref={lastMessageRef}></div>
+            </div>
+            <MessageInput {...messageInputProps} />
           </div>
-          <MessageInput {...messageInputProps} />
         </div>
-      </div>
+      )}
     </Layout>
   );
 };

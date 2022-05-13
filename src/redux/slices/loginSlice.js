@@ -1,31 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const saveToLocalStorage = (state) => {
+    localStorage.setItem('globalState', JSON.stringify(state));
+};
+
+const getFromLocalStorage = (keyName) => {
+    const item = localStorage.getItem(keyName);
+
+    if (item) {
+        return JSON.parse(item);
+    }
+
+    return false;
+}
+
 export const loginSlice = createSlice({
     name: 'login',
-    initialState: {
+    initialState: getFromLocalStorage('globalState') ? getFromLocalStorage('globalState') : {
         isLoggedIn: false,
-        username: '',
-        email: '',
-        firstName: '',
-        lastName: '',
-        role: '',
-        cellphone: ''
+        awsUserData: {},
+        userData: {}
     },
     reducers: {
-        login: (state, action) => {
-            const {
-                email,
-                firstName,
-                lastName,
-                role
-            } = action.payload
-            
+        login: (state, action) => {            
             state.isLoggedIn = true;
-            state.username = `${firstName} ${lastName}`;
-            state.firstName = firstName;
-            state.lastName = lastName;
-            state.email = email;
-            state.role = role;
+
+            if (action.payload) {
+                state.awsUserData = {...JSON.parse(action.payload)};
+            }
+
+            saveToLocalStorage(state);
         },
         logout: (state) => {
             state.isLoggedIn = false;
@@ -34,13 +38,20 @@ export const loginSlice = createSlice({
             state.lastName = '';
             state.email = '';
             state.role = '';
+
+            saveToLocalStorage(state);
+        },
+        setUserData: (state, action) => {
+            state.userData = {...action.payload};
+            saveToLocalStorage(state);
         }
     }
 });
 
 export const {
     login,
-    logout
+    logout,
+    setUserData
 } = loginSlice.actions;
 
 export default loginSlice.reducer;

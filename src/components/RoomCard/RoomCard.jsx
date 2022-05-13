@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { BsChatLeftDots } from 'react-icons/bs';
 
-const RoomCard = ({ id, name, path, isChatCard }) => {
+const RoomCard = ({ name, path, isChatCard }) => {
   const navigate = useNavigate();
 
   return (

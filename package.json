@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^13.5.0",
+    "amazon-cognito-identity-js": "^5.2.8",
     "express": "^4.17.3",
     "net": "^1.0.2",
     "node-sass": "^7.0.1",
@@ -23,6 +24,7 @@
     "socket.io-client": "^2.2.0",
     "sockjs-client": "^1.6.0",
     "stompjs": "^2.3.3",
+    "sweetalert": "^2.1.2",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
   },

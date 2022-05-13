@@ -10,8 +10,6 @@ const MessageInput = ({ message, setMessage, sendMessage }) => {
     if (event.key === 'Enter') {
       event.preventDefault();
 
-      // debugger;;
-
       if (message.trim()) {
         sendMessage();
       }

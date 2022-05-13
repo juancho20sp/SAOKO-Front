@@ -6,8 +6,6 @@ export const BOARD = 'BOARD';
 export const roomSlice = createSlice({
     name: 'room',
     initialState: {
-        // $
-        // TODO -> eliminar esto
         chatRooms: [
             {
                 id: 0,
@@ -94,8 +92,16 @@ export const roomSlice = createSlice({
               },
         ],
         newRoom: {},
+        newRoomCode: '',
+        createdCode: ''
     },
     reducers: {
+        setCreatedCode: (state, action) => {
+          state.createdCode = action.payload;
+        },
+        setNewRoomCode: (state, action) => {
+          state.newRoomCode = action.payload;
+        },
         setChatRooms: (state, action) => {
             state.chatRooms = [ ...action.payload];
         },
@@ -107,9 +113,9 @@ export const roomSlice = createSlice({
       },
 
         addMessageToChatRoom: (state, action) => {
-          const room = state.chatRooms.filter(room => room.path === action.payload.receiverName)[0];
+          const room = state.chatRooms.filter(item => item.path === action.payload.receiverName)[0];
 
-          const idx = state.chatRooms.findIndex(room => room.path === action.payload.receiverName)
+          const idx = state.chatRooms.findIndex(item => item.path === action.payload.receiverName)
 
           state.chatRooms[idx] = {...room,
             messages: [...room.messages, action.payload]
@@ -135,9 +141,9 @@ export const roomSlice = createSlice({
 
           }
 
-          const room = rooms.filter(room => room.path === action.payload.path)[0];
+          const room = rooms.filter(item => item.path === action.payload.path)[0];
 
-          const idx = rooms.findIndex(room => room.path === action.payload.path)
+          const idx = rooms.findIndex(item => item.path === action.payload.path)
 
           state[roomLabel][idx] = {...room,
             isConnected: action.payload.isConnected
@@ -145,10 +151,10 @@ export const roomSlice = createSlice({
         },
 
         addCardToColumn: (state, action) => {
-          const { from, to, path, card } = action.payload;
+          const { from, path, card } = action.payload;
 
-          let room = state.boardRooms.find(room => room.path === path);
-          const roomIdx = state.boardRooms.findIndex(room => room.path === path);
+          let room = state.boardRooms.find(item => item.path === path);
+          const roomIdx = state.boardRooms.findIndex(item => item.path === path);
           room = state.boardRooms[roomIdx];
 
           
@@ -162,8 +168,8 @@ export const roomSlice = createSlice({
         moveCard: (state, action) => {
           const { result, columns, path } = action.payload.resultData ? action.payload.resultData : action.payload;
 
-          let room = state.boardRooms.find(room => room.path === path);
-          const roomIdx = state.boardRooms.findIndex(room => room.path === path);
+          let room = state.boardRooms.find(item => item.path === path);
+          const roomIdx = state.boardRooms.findIndex(item => item.path === path);
           room = state.boardRooms[roomIdx];
 
 
@@ -218,5 +224,5 @@ export const roomSlice = createSlice({
     }
 });
 
-export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard, setNewBoardRoom } = roomSlice.actions;
+export const { setNewChatRoom, setChatRooms, addMessageToChatRoom, setConnected, addCardToColumn, moveCard, setNewBoardRoom, setNewRoomCode, setCreatedCode } = roomSlice.actions;
 export default roomSlice.reducer;

@@ -1,8 +1,13 @@
 import React from 'react';
 import styles from './RoomCode.module.scss';
 
-const RoomCode = ({ code }) => {
-  return <p className={styles['roomCode-main']}>A2R7FG9</p>;
+// Redux
+import { useSelector } from 'react-redux';
+
+const RoomCode = () => {
+  const code = useSelector((state) => state.room.createdCode);
+
+  return <p className={styles['roomCode-main']}>{code}</p>;
 };
 
 export default RoomCode;

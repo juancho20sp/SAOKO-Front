@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from './Login.module.scss';
 
 // Components
@@ -15,13 +15,8 @@ const Login = () => {
     setPassword,
     handleSignInClick,
     handleLogInClick,
+    handleKeyPress,
   } = useLogin();
-
-  useEffect(() => {
-    return () => {
-      setIsLoading(false);
-    };
-  }, [setIsLoading]);
 
   return (
     <main className={styles['login-main']}>
@@ -51,6 +46,7 @@ const Login = () => {
                 placeholder='PASSWORD'
                 className={styles['login-input']}
                 onChange={(e) => setPassword(e.target.value.trim())}
+                onKeyPress={handleKeyPress}
               />
             </div>
 
