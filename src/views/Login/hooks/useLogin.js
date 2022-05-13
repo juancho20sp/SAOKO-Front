@@ -43,8 +43,7 @@ const useLogin = () => {
             'error'
           );
         }
-      });
-  
+      });  
       // const url = `${process.env.REACT_APP_BACKEND_URL}/user/login`;
       // const data = {
       //   email,
@@ -65,6 +64,12 @@ const useLogin = () => {
       //   setIsLoading(false);
       // }
     };
+
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        handleLogInClick(event);
+      }
+    }
   
     return {
       email,
@@ -75,6 +80,7 @@ const useLogin = () => {
       // setIsLoading,
       handleLogInClick,
       handleSignInClick,
+      handleKeyPress
     };
   };
 

@@ -26,6 +26,7 @@ const CreateAccount = () => {
     setIsLoading,
     cleanUpData,
     createAccount,
+    handleKeyPress,
   } = UseCreateAccount();
 
   useEffect(() => {
@@ -121,6 +122,7 @@ const CreateAccount = () => {
                   className={styles['createAccount-input']}
                   value={secondPassword}
                   onChange={(e) => setSecondPassword(e.target.value.trim())}
+                  onKeyPress={handleKeyPress}
                 />
               </div>
             </div>

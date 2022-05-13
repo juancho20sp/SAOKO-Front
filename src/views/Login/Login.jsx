@@ -15,6 +15,7 @@ const Login = () => {
     setPassword,
     handleSignInClick,
     handleLogInClick,
+    handleKeyPress,
   } = useLogin();
 
   // useEffect(() => {
@@ -51,6 +52,7 @@ const Login = () => {
                 placeholder='PASSWORD'
                 className={styles['login-input']}
                 onChange={(e) => setPassword(e.target.value.trim())}
+                onKeyPress={handleKeyPress}
               />
             </div>
 

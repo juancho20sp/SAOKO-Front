@@ -37,7 +37,11 @@ const useCreateAccount = () => {
       event.preventDefault();
   
       if (firstPassword !== secondPassword) {
-        alert('Las contraseñas no coinciden');
+        swal(
+          'Algo salió mal',
+          'Las contraseñas no coinciden',
+          'error'
+        );
         return;
       }
     
@@ -94,6 +98,12 @@ const useCreateAccount = () => {
       //   setIsLoading(false);
       // }
     };
+
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        createAccount(event);
+      }
+    }
   
     return {
       firstName,
@@ -112,6 +122,7 @@ const useCreateAccount = () => {
       setIsLoading,
       cleanUpData,
       createAccount,
+      handleKeyPress
     };
   };
 
